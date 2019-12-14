@@ -61,7 +61,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
                 print("Could not save. \(error), \(error.userInfo)")
             }
         }
-        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        (UIApplication.shared.delegate as! AppDelegate).saveBackground()
         
         dismiss(animated: true, completion: nil)
     }

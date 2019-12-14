@@ -63,15 +63,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     // MARK: - Core Data Saving support
-
-    func saveContext () {
-        let context = persistentContainer.viewContext
+    
+    // MOC: initializes with a concurrency type
+    //      dedicates a single thread for them to do work on
+    // main - main thread
+    // private - any background thread
+    
+    lazy var mainContext: NSManagedObjectContext = {
+        let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        moc.persistentStoreCoordinator = self.persistentContainer.persistentStoreCoordinator
+        return moc
+    }()
+    
+    lazy var backgroundContext: NSManagedObjectContext = {
+        let moc = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        moc.parent = self.mainContext
+        return moc
+    }()
+    
+    // MARK - Lifecycle Methods
+    
+    deinit {
+        saveBackground()
+        saveMain()
+    }
+    
+    // MARK: - Core Data Saving support
+    
+    func saveMain() {
+        saveHelper(mainContext)
+    }
+    
+    func saveBackground() {
+        saveHelper(backgroundContext)
+    }
+    
+    func saveHelper(_ context: NSManagedObjectContext) {
         if context.hasChanges {
             do {
                 try context.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }

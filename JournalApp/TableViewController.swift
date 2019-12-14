@@ -34,7 +34,6 @@ class TableViewController: UITableViewController {
         
         do {
             items = try managedContext.fetch(fetchRequest)
-            print(items)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -75,7 +74,7 @@ extension TableViewController {
             
             let item = self.items[indexPath.row]
             self.context.delete(item)
-            (UIApplication.shared.delegate as! AppDelegate).saveContext()
+            (UIApplication.shared.delegate as! AppDelegate).saveBackground()
             
             self.items.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
