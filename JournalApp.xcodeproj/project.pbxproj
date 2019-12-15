@@ -17,6 +17,7 @@
 		0405BA2E23999D92005C34C8 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA2D23999D92005C34C8 /* TableViewController.swift */; };
 		0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA2F239AB593005C34C8 /* AddItemViewController.swift */; };
 		0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */; };
+		0405BA5E23A5DD1A005C34C8 /* JournalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		0405BA2D23999D92005C34C8 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		0405BA2F239AB593005C34C8 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
 		0405BA32239B0C0C005C34C8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
 				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
 				0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */,
+				0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */,
 			);
 			path = JournalApp;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */,
 				0405B9FD239963C5005C34C8 /* SceneDelegate.swift in Sources */,
 				0405BA2E23999D92005C34C8 /* TableViewController.swift in Sources */,
+				0405BA5E23A5DD1A005C34C8 /* JournalCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
