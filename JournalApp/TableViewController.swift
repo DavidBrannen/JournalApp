@@ -12,8 +12,29 @@ import CoreData
 struct EntryStrut {
     var entryText: String?
     var dateOfWeather: String?
-    var timeStamp: String?
+    var timeStamp: String
     var cityText: String?
+    var weatherStateText: String
+}
+struct Weather : Codable {
+    let consolidated_weather : [CityDayWeather]
+}
+struct CityDayWeather : Codable {
+    let id                  :  Int
+    let weather_state_name  :  String
+    let weather_state_abbr  :  String
+    let wind_direction_compass:String
+    let created             :  String
+    let applicable_date     :  String
+    let min_temp            :  Float
+    let max_temp            :  Float
+    let the_temp            :  Float
+    let wind_speed          :  Float
+    let wind_direction      :  Float
+    let air_pressure        :  Float
+    let humidity            :  Int
+    let visibility          :  Float?
+    let predictability      :  Int
 }
 
 class TableViewController: UITableViewController {
@@ -21,6 +42,7 @@ class TableViewController: UITableViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var items: [NSManagedObject] = []
     var arrayOfItems: [EntryStrut] = []
+    var arrayOfCityDayWeathers: [CityDayWeather] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +52,9 @@ class TableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        arrayOfItems = []
         fetchData()
+        updateWeatherState()
     }
     
     func fetchData() {
@@ -42,12 +66,12 @@ class TableViewController: UITableViewController {
         
         do {
             items = try managedContext.fetch(fetchRequest)
-            displayArray()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
         } catch let error as NSError {
             print("Could not Fetch Data. \(error), \(error.userInfo)")
+        }
+        displayArray()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
     func displayArray() {
@@ -61,29 +85,30 @@ class TableViewController: UITableViewController {
                 timeStamp = "Added on \(date) at \(time)"
             }
             let cityText = "Atlatna"
-            arrayOfItems.append(EntryStrut(entryText: item.value(forKey: "entry") as? String, dateOfWeather: dateOfWeather, timeStamp: timeStamp, cityText: cityText))
+            arrayOfItems.append(EntryStrut(entryText: item.value(forKey: "entry") as? String, dateOfWeather: dateOfWeather, timeStamp: timeStamp, cityText: cityText, weatherStateText: ""))
         }
+        arrayOfItems.sort {$0.timeStamp < $1.timeStamp}
     }
-    func convertDateFormater(_ date: String) -> String
-    {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/YY"
-        let date = dateFormatter.date(from: date)
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-        return  dateFormatter.string(from: date!)
+    func convertDateFormater(_ date: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yy"
+        let dateDate = dateFormatterGet.date(from: date)!
+        let dateformat = DateFormatter()
+        dateformat.dateFormat = "yyyy/MM/dd"
+        return dateformat.string(from: dateDate)
     }
 }
 
 extension TableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> JournalCell {
-        displayArray()
         let item = arrayOfItems[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! JournalCell
         
-        cell.entryLabel.text = item.entryText
-        cell.timeLabel.text = item.timeStamp
-//        getWeatherStateAbbr(weatherDate: <#T##String#>)
+        cell.entryLabel.text   = item.entryText
+        cell.timeLabel.text    = item.timeStamp
+        cell.weatherState.text = item.weatherStateText
+
         return cell
     }
     
@@ -100,14 +125,50 @@ extension TableViewController {
             
             let item = self.items[indexPath.row]
             self.context.delete(item)
-            (UIApplication.shared.delegate as! AppDelegate).saveBackground()
-            
             self.items.remove(at: indexPath.row)
+            (UIApplication.shared.delegate as! AppDelegate).saveBackground()
             self.arrayOfItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
         return swipeActions
     }
-}
+    
+    //https://www.metaweather.com/api/location/2357024/2019/12/13/
+    
+    func updateWeatherState() {
+        for index in arrayOfItems.indices {
+            //https://www.metaweather.com/api/location/search/?query=atlanta //arrayOfItems[index].cityText
+            let locationNumber = "2357024"
+            let wDate = arrayOfItems[index].dateOfWeather
+            var request = "https://www.metaweather.com/api/location/" + locationNumber
+            request = request + "/" + wDate! + "/"
+            guard let url = URL(string: request) else {return}
+            let session = URLSession.shared
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    print(response!)
+                    return
+                }
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        self.arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
+                        self.arrayOfItems[index].weatherStateText = self.arrayOfCityDayWeathers[0].weather_state_name
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
+                    } catch let error  {
+                        print("Parsing Failed \(error.localizedDescription)")
+                    }
+                }
+            }
+            task.resume()
 
+        }
+    }
+}

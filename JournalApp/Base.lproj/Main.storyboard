@@ -116,21 +116,33 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Trs-mc-uwx">
-                                            <rect key="frame" x="230" y="36" width="20" height="20"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Trs-mc-uwx" userLabel="weather Image">
+                                            <rect key="frame" x="354" y="6" width="50" height="50"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="20" id="DP2-b0-Tet"/>
-                                                <constraint firstAttribute="height" constant="20" id="VFC-rv-GVp"/>
+                                                <constraint firstAttribute="width" constant="50" id="DP2-b0-Tet"/>
+                                                <constraint firstAttribute="height" constant="50" id="VFC-rv-GVp"/>
                                             </constraints>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="xVV-RJ-22W" userLabel="weather State">
+                                            <rect key="frame" x="230" y="36" width="100" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="3tm-uU-H23"/>
+                                                <constraint firstAttribute="width" constant="100" id="pgt-pz-666"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Trs-mc-uwx" firstAttribute="leading" secondItem="IU5-xe-tve" secondAttribute="trailing" constant="10" id="8Nh-My-zBL"/>
                                         <constraint firstAttribute="bottom" secondItem="IU5-xe-tve" secondAttribute="bottom" id="J4I-hh-SO3"/>
                                         <constraint firstAttribute="trailing" secondItem="Pqo-iu-ZMx" secondAttribute="trailing" id="Qdg-6w-lkP"/>
+                                        <constraint firstItem="IU5-xe-tve" firstAttribute="top" secondItem="xVV-RJ-22W" secondAttribute="bottom" constant="-20" id="Sl0-uV-H6i"/>
                                         <constraint firstItem="IU5-xe-tve" firstAttribute="top" secondItem="Pqo-iu-ZMx" secondAttribute="bottom" constant="5" id="XvF-7P-uco"/>
                                         <constraint firstItem="IU5-xe-tve" firstAttribute="leading" secondItem="m5H-9J-Hu1" secondAttribute="leading" constant="20" id="baN-Qv-zib"/>
                                         <constraint firstItem="Pqo-iu-ZMx" firstAttribute="leading" secondItem="m5H-9J-Hu1" secondAttribute="leading" constant="20" id="cqJ-QM-Jc9"/>
+                                        <constraint firstAttribute="trailing" secondItem="Trs-mc-uwx" secondAttribute="trailing" constant="10" id="eFm-ps-OGe"/>
+                                        <constraint firstItem="xVV-RJ-22W" firstAttribute="leading" secondItem="IU5-xe-tve" secondAttribute="leading" constant="210" id="fgf-Ld-apL"/>
                                         <constraint firstAttribute="bottom" secondItem="Trs-mc-uwx" secondAttribute="bottom" id="pMn-N0-osL"/>
                                         <constraint firstItem="Pqo-iu-ZMx" firstAttribute="top" secondItem="m5H-9J-Hu1" secondAttribute="top" constant="10" id="tbx-sX-Zhn"/>
                                     </constraints>
@@ -139,6 +151,7 @@
                                     <outlet property="entryLabel" destination="Pqo-iu-ZMx" id="nDp-D0-C77"/>
                                     <outlet property="timeLabel" destination="IU5-xe-tve" id="dVF-Se-FgF"/>
                                     <outlet property="weatherImage" destination="Trs-mc-uwx" id="YmQ-oX-sMD"/>
+                                    <outlet property="weatherState" destination="xVV-RJ-22W" id="lev-Fd-goa"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
