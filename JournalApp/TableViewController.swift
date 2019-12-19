@@ -9,13 +9,6 @@
 import UIKit
 import CoreData
 
-struct EntryStrut {
-    var entryText: String?
-    var dateOfWeather: String?
-    var timeStamp: String
-    var cityText: String?
-    var weatherStateText: String
-}
 struct Weather : Codable {
     let consolidated_weather : [CityDayWeather]
 }
@@ -39,11 +32,10 @@ struct CityDayWeather : Codable {
 
 class TableViewController: UITableViewController {
     let cellId = "Cell"
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = (UIApplication.shared.delegate as! AppDelegate).backgroundContext
     var items: [NSManagedObject] = []
-    var arrayOfItems: [EntryStrut] = []
-    var arrayOfCityDayWeathers: [CityDayWeather] = []
-    
+    var weatherArray = [[String:String]]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
@@ -52,16 +44,15 @@ class TableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        arrayOfItems = []
         fetchData()
-        updateWeatherState()
+        //        updateWeatherState() // off main queue
     }
     
     func fetchData() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        let managedContext = appDelegate.persistentContainer.viewContext
+        let managedContext = appDelegate.backgroundContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Item")
         
         do {
@@ -69,25 +60,10 @@ class TableViewController: UITableViewController {
         } catch let error as NSError {
             print("Could not Fetch Data. \(error), \(error.userInfo)")
         }
-        displayArray()
+//        updateItems()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
-    func displayArray() {
-        arrayOfItems = []
-        for item in items {
-            let dateOfWeather = convertDateFormater((item.value(forKey: "date") as? String)!)
-            var timeStamp: String = ""
-            let date = item.value(forKeyPath: "date") as? String
-            let time = item.value(forKeyPath: "time") as? String
-            if let date = date, let time = time {
-                timeStamp = "Added on \(date) at \(time)"
-            }
-            let cityText = "Atlatna"
-            arrayOfItems.append(EntryStrut(entryText: item.value(forKey: "entry") as? String, dateOfWeather: dateOfWeather, timeStamp: timeStamp, cityText: cityText, weatherStateText: ""))
-        }
-        arrayOfItems.sort {$0.timeStamp < $1.timeStamp}
     }
     func convertDateFormater(_ date: String) -> String {
         let dateFormatterGet = DateFormatter()
@@ -102,18 +78,26 @@ class TableViewController: UITableViewController {
 extension TableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> JournalCell {
-        let item = arrayOfItems[indexPath.row]
+        let item = items[indexPath.row]
+//                    if let i = item as? Item {
+//                        print(i.timestamp)
+//                    }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! JournalCell
+        var timeStamp: String = ""
+        let date = item.value(forKeyPath: "date") as? String
+        let time = item.value(forKeyPath: "time") as? String
+        if let date = date, let time = time {
+            timeStamp = "Added on \(date) at \(time)"
+        }
+        cell.entryLabel.text   = item.value(forKeyPath: "entry") as? String
+        cell.timeLabel.text    = timeStamp
+//        cell.weatherState.text = weatherArray[indexPath.row].value as String
         
-        cell.entryLabel.text   = item.entryText
-        cell.timeLabel.text    = item.timeStamp
-        cell.weatherState.text = item.weatherStateText
-
         return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrayOfItems.count
+        return items.count
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -126,49 +110,81 @@ extension TableViewController {
             let item = self.items[indexPath.row]
             self.context.delete(item)
             self.items.remove(at: indexPath.row)
-            (UIApplication.shared.delegate as! AppDelegate).saveBackground()
-            self.arrayOfItems.remove(at: indexPath.row)
+            (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
         return swipeActions
     }
-    
+    func updateItems() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.backgroundContext
+        guard NSEntityDescription.entity(forEntityName: "Item", in: managedContext) != nil else {
+            return }
+        
+        for index in items.indices {
+            //            if items[index].value(forKeyPath: "timestamp") == "2019-12-19 00:10:59 +0000" {
+            let newDate = convertStringToDate(items[index].value(forKeyPath: "date") as! String)
+            items[index].setValue(newDate, forKey: "timestamp")
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Could not save1. \(error), \(error.userInfo)")
+            }
+            appDelegate.saveCoreDataChanges()
+        }
+        
+    }
+    func convertStringToDate(_ date: String) -> Date {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yy"
+        let dateDate = dateFormatterGet.date(from: date)!
+        return dateDate
+    }
     //https://www.metaweather.com/api/location/2357024/2019/12/13/
     
-    func updateWeatherState() {
-        for index in arrayOfItems.indices {
-            //https://www.metaweather.com/api/location/search/?query=atlanta //arrayOfItems[index].cityText
-            let locationNumber = "2357024"
-            let wDate = arrayOfItems[index].dateOfWeather
-            var request = "https://www.metaweather.com/api/location/" + locationNumber
-            request = request + "/" + wDate! + "/"
-            guard let url = URL(string: request) else {return}
-            let session = URLSession.shared
-            let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    print(error!)
-                    return
-                }
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                    print(response!)
-                    return
-                }
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    do {
-                        self.arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
-                        self.arrayOfItems[index].weatherStateText = self.arrayOfCityDayWeathers[0].weather_state_name
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
+        func updateWeatherState() {
+            var arrayOfCityDayWeathers: [CityDayWeather] = []
+            weatherArray = []
+            for index in items.indices {
+                //https://www.metaweather.com/api/location/search/?query=atlanta //arrayOfItems[index].cityText
+                let locationNumber = "2357024"
+                let wDate = items[index].value(forKeyPath: "dateOfWeather") as! String
+                var request = "https://www.metaweather.com/api/location/" + locationNumber + "/"
+                request = request  + wDate + "/"
+                guard let url = URL(string: request) else {return}
+                let session = URLSession.shared
+                let task = session.dataTask(with: url) { (data, response, error) in
+                    if error != nil {
+                        print(error!)
+                        return
+                    }
+                    guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                        print(response!)
+                        return
+                    }
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        do {
+                            arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
+                            let indexText = String(index)
+                            self.weatherArray.append(["index" : indexText, "weatherStateText" : "arrayOfCityDayWeathers.weather_state_name"])
+//                                weatherArray[index].inser(contentsOf: arrayOfCityDayWeathers.wea) =
+//                            let weatherStateText = self.arrayOfCityDayWeathers[0].weather_state_name
+//                            items[index].value(forKeyPath: <#T##String#>)
+//                            DispatchQueue.main.async {
+//                                self.tableView.reloadData()
+//                            }
+                        } catch let error  {
+                            print("Parsing Failed \(error.localizedDescription)")
                         }
-                    } catch let error  {
-                        print("Parsing Failed \(error.localizedDescription)")
                     }
                 }
+                task.resume()
+    
             }
-            task.resume()
-
         }
-    }
 }

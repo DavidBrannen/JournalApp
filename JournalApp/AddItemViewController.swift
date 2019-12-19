@@ -46,13 +46,14 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
-            let managedContext = appDelegate.persistentContainer.viewContext
+            let managedContext = appDelegate.mainContext
             guard let entity = NSEntityDescription.entity(forEntityName: "Item", in: managedContext) else {
                 return }
             let item = NSManagedObject(entity: entity, insertInto: managedContext)
             item.setValue(currentDate, forKey: "date")
             item.setValue(currentTime, forKey: "time")
             item.setValue(entryText, forKey: "entry")
+            item.setValue(Date(), forKey: "timestamp")
 
             do {
                 try managedContext.save()
@@ -61,7 +62,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
                 print("Could not save. \(error), \(error.userInfo)")
             }
         }
-        (UIApplication.shared.delegate as! AppDelegate).saveBackground()
+        (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
         
         dismiss(animated: true, completion: nil)
     }

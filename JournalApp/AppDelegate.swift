@@ -83,31 +83,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK - Lifecycle Methods
     
-    deinit {
-        saveBackground()
-        saveMain()
-    }
+//    deinit {
+//        saveBackground()
+//        saveMain()
+//    }
     
     // MARK: - Core Data Saving support
-    
-    func saveMain() {
-        saveHelper(mainContext)
-    }
-    
-    func saveBackground() {
-        saveHelper(backgroundContext)
-    }
-    
-    func saveHelper(_ context: NSManagedObjectContext) {
-        if context.hasChanges {
+    func saveCoreDataChanges() {
+        if backgroundContext.hasChanges {
             do {
-                try context.save()
+                try backgroundContext.save()
             } catch {
                 let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                fatalError("Unresolved error with backgroundContext \(nserror), \(nserror.userInfo)")
+            }
+            
+            do {
+                try mainContext.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error with mainContext \(nserror), \(nserror.userInfo)")
             }
         }
     }
+
+//    func saveMain() {
+//        saveHelper(mainContext)
+//    }
+//    
+//    func saveBackground() {
+//        saveHelper(backgroundContext)
+//    }
+    
+//    func saveHelper(_ context: NSManagedObjectContext) {
+//        if context.hasChanges {
+//            do {
+//                try context.save()
+//            } catch {
+//                let nserror = error as NSError
+//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//            }
+//        }
+//    }
 
 }
 
