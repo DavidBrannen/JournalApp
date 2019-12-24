@@ -18,6 +18,7 @@
 		0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA2F239AB593005C34C8 /* AddItemViewController.swift */; };
 		0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */; };
 		0405BA5E23A5DD1A005C34C8 /* JournalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */; };
+		046BC11A23B260CC0054C06B /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046BC11923B260CC0054C06B /* WeatherModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		0405BA32239B0C0C005C34C8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalCell.swift; sourceTree = "<group>"; };
 		046BC10F23AAC76C0054C06B /* Model v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model v2.xcdatamodel"; sourceTree = "<group>"; };
+		046BC11923B260CC0054C06B /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		0405B9EE239963C5005C34C8 = {
 			isa = PBXGroup;
 			children = (
+				046BC11823B260200054C06B /* Model */,
 				0405B9F9239963C5005C34C8 /* JournalApp */,
 				0405BA13239963C8005C34C8 /* JournalAppTests */,
 				0405BA1E239963C8005C34C8 /* JournalAppUITests */,
@@ -136,6 +139,14 @@
 				0405BA21239963C8005C34C8 /* Info.plist */,
 			);
 			path = JournalAppUITests;
+			sourceTree = "<group>";
+		};
+		046BC11823B260200054C06B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				046BC11923B260CC0054C06B /* WeatherModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +283,7 @@
 				0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */,
 				0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */,
 				0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */,
+				046BC11A23B260CC0054C06B /* WeatherModel.swift in Sources */,
 				0405B9FD239963C5005C34C8 /* SceneDelegate.swift in Sources */,
 				0405BA2E23999D92005C34C8 /* TableViewController.swift in Sources */,
 				0405BA5E23A5DD1A005C34C8 /* JournalCell.swift in Sources */,
