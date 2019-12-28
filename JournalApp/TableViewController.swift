@@ -11,8 +11,18 @@ import CoreData
 
 
 class TableViewController: UITableViewController {
+    let persistenceManager: PersistenceManager
+    init(persistenceManager: PersistenceManager) {
+        self.persistenceManager = persistenceManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        persistenceManager = PersistenceManager.shared
+        super.init(coder: aDecoder)
+    }
+
+    
     let cellId = "Cell"
-    let context = (UIApplication.shared.delegate as! AppDelegate).backgroundContext
     var items: [NSManagedObject] = []
     var arrayOfCityDayWeathers: [CityDayWeather] = []
     
@@ -30,31 +40,10 @@ class TableViewController: UITableViewController {
     
     /// loads any offline data & reloads the UI
     func fetchData() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let managedContext = appDelegate.backgroundContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Item")
-        
-        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
-        fetchRequest.sortDescriptors = [sort]
-        do {
-            items = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not Fetch Data. \(error), \(error.userInfo)")
-        }
-
+        items = persistenceManager.fetch(Item.self)
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
-    func convertDateFormater(_ date: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yy"
-        let dateDate = dateFormatterGet.date(from: date)!
-        let dateformat = DateFormatter()
-        dateformat.dateFormat = "yyyy/MM/dd"
-        return dateformat.string(from: dateDate)
     }
 
     /// downloads data from your remote
@@ -100,6 +89,14 @@ class TableViewController: UITableViewController {
         let dateDate = dateFormatterGet.date(from: date)!
         return dateDate
     }
+    func convertDateFormater(_ date: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yy"
+        let dateDate = dateFormatterGet.date(from: date)!
+        let dateformat = DateFormatter()
+        dateformat.dateFormat = "yyyy/MM/dd"
+        return dateformat.string(from: dateDate)
+    }
 }
 
 extension TableViewController {
@@ -132,9 +129,9 @@ extension TableViewController {
         let contextItem = UIContextualAction(style: .destructive, title: "Delete") {  (contextualAction, view, boolValue) in
             
             let item = self.items[indexPath.row]
-            self.context.delete(item)
+            PersistenceManager.shared.context.delete(item)
             self.items.remove(at: indexPath.row)
-            (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
+            PersistenceManager.shared.save()
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])

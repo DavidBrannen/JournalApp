@@ -10,7 +10,16 @@ import UIKit
 import CoreData
 
 class AddItemViewController: UIViewController, UITextViewDelegate {
-    
+    let persistenceManager: PersistenceManager
+    init(persistenceManager: PersistenceManager) {
+        self.persistenceManager = persistenceManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        persistenceManager = PersistenceManager.shared
+        super.init(coder: aDecoder)
+    }
+
     @IBOutlet weak var itemEntryTextView: UITextView!
     
     @IBAction func cancel(_ sender: UIButton) {
@@ -43,26 +52,23 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             guard let entryText = itemEntryTextView?.text else {
                 return
             }
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            let managedContext = appDelegate.mainContext
-            guard let entity = NSEntityDescription.entity(forEntityName: "Item", in: managedContext) else {
-                return }
-            let item = NSManagedObject(entity: entity, insertInto: managedContext)
+            let item = Item(context: persistenceManager.context)
+//            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//                return
+//            }
+//            let managedContext = appDelegate.mainContext
+//            guard let entity = NSEntityDescription.entity(forEntityName: "Item", in: persistenceManager.context) else {
+//                return }
+//            let item = NSManagedObject(entity: entity, insertInto: persistenceManager.context)
             item.setValue(currentDate, forKey: "date")
             item.setValue(currentTime, forKey: "time")
             item.setValue(entryText, forKey: "entry")
             item.setValue(Date(), forKey: "timestamp")
 
-            do {
-                try managedContext.save()
-                items.append(item)
-            } catch let error as NSError {
-                print("Could not save. \(error), \(error.userInfo)")
-            }
+            items.append(item)
+            persistenceManager.save()
         }
-        (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
+//        (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
         
         dismiss(animated: true, completion: nil)
     }
