@@ -11,6 +11,9 @@ import CoreData
 
 
 class TableViewController: UITableViewController {
+    
+    let cellId = "Cell"
+    var items: [NSManagedObject] = []
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
@@ -21,11 +24,6 @@ class TableViewController: UITableViewController {
         super.init(coder: aDecoder)
     }
 
-    
-    let cellId = "Cell"
-    var items: [NSManagedObject] = []
-    var arrayOfCityDayWeathers: [CityDayWeather] = []
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
@@ -34,11 +32,12 @@ class TableViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+/// loads any offline data & reloads the UI
         fetchData()
+/// downloads weather data from your remote & reloads UI
         fetchWeather()
     }
     
-    /// loads any offline data & reloads the UI
     func fetchData() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
         items = persistenceManager.fetch(Item.self, sort: sort)
@@ -46,59 +45,12 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
-
-    /// downloads data from your remote
-    //https://www.metaweather.com/api/location/2357024/2019/12/13/
     func fetchWeather() {
-        for index in items.indices {
-            //https://www.metaweather.com/api/location/search/?query=atlanta //arrayOfItems[index].cityText
-            let locationNumber = "2357024"
-            var wDate = items[index].value(forKeyPath: "date") as! String
-            wDate = convertDateFormater(wDate)
-            var request = "https://www.metaweather.com/api/location/" + locationNumber + "/"
-            request = request  + wDate + "/"
-            guard let url = URL(string: request) else {return}
-            let session = URLSession.shared
-            let dataTask = session.dataTask(with: url) { (data, response, error) in
-                if error != nil { print(error!); return}
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                    print(response!)
-                    return
-                }
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    do {
-                        /// once data is received & serialized, place within structure
-                        self.arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
-                        if let item = self.items[index] as? Item {
-                            if self.arrayOfCityDayWeathers.count > 0 {
-                                item.weather_state_name = self.arrayOfCityDayWeathers[0].weather_state_name
-                            }
-                        }
-                    } catch let error {
-                        print("Parsing Failed \(error.localizedDescription)")
-                    }
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-            dataTask.resume()
+        let viewModel: ViewModel = ViewModel()
+        items = viewModel.fetchWeather(items: items)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
-    }
-    func convertStringToDate(_ date: String) -> Date {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yy"
-        let dateDate = dateFormatterGet.date(from: date)!
-        return dateDate
-    }
-    func convertDateFormater(_ date: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yy"
-        let dateDate = dateFormatterGet.date(from: date)!
-        let dateformat = DateFormatter()
-        dateformat.dateFormat = "yyyy/MM/dd"
-        return dateformat.string(from: dateDate)
     }
 }
 
