@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  JournalApp
 //
-//  Created by MAC on 12/5/19.
+//  Created by David Brannen on 12/5/19.
 //  Copyright © 2019 MAC. All rights reserved.
 //
 
@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         return true
     }
 

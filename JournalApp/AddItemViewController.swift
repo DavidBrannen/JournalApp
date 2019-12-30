@@ -2,7 +2,7 @@
 //  AddItemViewController.swift
 //  JournalApp
 //
-//  Created by MAC on 12/6/19.
+//  Created by David Brannen on 12/6/19.
 //  Copyright © 2019 MAC. All rights reserved.
 //
 
@@ -43,7 +43,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             
             let date = Date()
             let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/YY"
+            formatter.dateFormat = "MM/dd/yy"
             let currentDate = formatter.string(from: date)
             let timeFormatter = DateFormatter()
             timeFormatter.timeStyle = .short
@@ -53,13 +53,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
                 return
             }
             let item = Item(context: persistenceManager.context)
-//            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//                return
-//            }
-//            let managedContext = appDelegate.mainContext
-//            guard let entity = NSEntityDescription.entity(forEntityName: "Item", in: persistenceManager.context) else {
-//                return }
-//            let item = NSManagedObject(entity: entity, insertInto: persistenceManager.context)
             item.setValue(currentDate, forKey: "date")
             item.setValue(currentTime, forKey: "time")
             item.setValue(entryText, forKey: "entry")
@@ -67,9 +60,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
 
             items.append(item)
             persistenceManager.save()
-        }
-//        (UIApplication.shared.delegate as! AppDelegate).saveCoreDataChanges()
-        
+        }        
         dismiss(animated: true, completion: nil)
     }
     

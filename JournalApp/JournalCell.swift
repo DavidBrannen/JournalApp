@@ -2,7 +2,7 @@
 //  JournalCell.swift
 //  JournalApp
 //
-//  Created by MAC on 12/14/19.
+//  Created by David Brannen on 12/14/19.
 //  Copyright © 2019 MAC. All rights reserved.
 //
 

@@ -40,7 +40,8 @@ class TableViewController: UITableViewController {
     
     /// loads any offline data & reloads the UI
     func fetchData() {
-        items = persistenceManager.fetch(Item.self)
+        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
+        items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -70,7 +71,9 @@ class TableViewController: UITableViewController {
                         /// once data is received & serialized, place within structure
                         self.arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
                         if let item = self.items[index] as? Item {
-                            item.weather_state_name = self.arrayOfCityDayWeathers[0].weather_state_name
+                            if self.arrayOfCityDayWeathers.count > 0 {
+                                item.weather_state_name = self.arrayOfCityDayWeathers[0].weather_state_name
+                            }
                         }
                     } catch let error {
                         print("Parsing Failed \(error.localizedDescription)")
@@ -109,10 +112,8 @@ extension TableViewController {
         let item = items[indexPath.row] as! Item
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! JournalCell
         var timeStamp: String = ""
-        let date = item.date
-        let time = item.time
-        if let date = date, let time = time {
-            timeStamp = "Added on \(date) at \(time)"
+        if let date = item.date, let time = item.time {
+            timeStamp = "Added \(date) at \(time)"
         }
         cell.entryLabel.text   = item.entry
         cell.timeLabel.text    = timeStamp
@@ -137,32 +138,4 @@ extension TableViewController {
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
         return swipeActions
     }
-    ///use in cellFor Row
-    //                    if let i = item as? Item {
-    //                        print(i.timestamp)
-    //                    }
-
-    ///use at the end of fetchData() to replace/update core data - one time only
-    //    func updateItems() {
-    //        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-    //            return
-    //        }
-    //        let managedContext = appDelegate.backgroundContext
-    //        guard NSEntityDescription.entity(forEntityName: "Item", in: managedContext) != nil else {
-    //            return }
-    //
-    //        for index in items.indices {
-    //            //            if items[index].value(forKeyPath: "timestamp") == "2019-12-19 00:10:59 +0000" {
-    //            let newDate = convertStringToDate(items[index].value(forKeyPath: "date") as! String)
-    //            items[index].setValue(newDate, forKey: "timestamp")
-    //
-    //            do {
-    //                try managedContext.save()
-    //            } catch let error as NSError {
-    //                print("Could not save1. \(error), \(error.userInfo)")
-    //            }
-    //            appDelegate.saveCoreDataChanges()
-    //        }
-    //
-    //    }
 }

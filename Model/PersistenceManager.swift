@@ -2,7 +2,7 @@
 //  PersistenceManager.swift
 //  JournalApp
 //
-//  Created by MAC on 12/28/19.
+//  Created by David Brannen on 12/28/19.
 //  Copyright © 2019 MAC. All rights reserved.
 //
 
@@ -25,6 +25,7 @@ final class PersistenceManager{
         })
         return container
     }()
+    
     lazy var context = persistentContainer.viewContext
 
     // MARK: - Core Data Saving support
@@ -33,18 +34,17 @@ final class PersistenceManager{
         if context.hasChanges {
             do {
                 try context.save()
-                print("saved context")
             } catch {
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
-    
-    func fetch<T: NSManagedObject>(_ objectType: T.Type) -> [T] {
+    func fetch<T: NSManagedObject>(_ objectType: T.Type, sort: NSSortDescriptor) -> [T] {
         
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        fetchRequest.sortDescriptors = [sort]
         do {
             let fetchedObjects = try context.fetch(fetchRequest) as? [T]
             return fetchedObjects ?? [T]()

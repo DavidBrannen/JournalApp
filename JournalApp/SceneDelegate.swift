@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  JournalApp
 //
-//  Created by MAC on 12/5/19.
+//  Created by David Brannen on 12/5/19.
 //  Copyright © 2019 MAC. All rights reserved.
 //
 
