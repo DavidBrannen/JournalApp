@@ -45,6 +45,7 @@ class ViewModel {
             }
             dataTask.resume()
         }
+        NotificationCenter.default.post(name: Notifications.notificationWeatherReady, object: nil)
         return items
     }
     func convertStringToDate(_ date: String) -> Date {

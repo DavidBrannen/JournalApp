@@ -28,3 +28,6 @@ struct CityDayWeather : Codable {
     let visibility          :  Float?
     let predictability      :  Int
 }
+class Notifications {
+    static let notificationWeatherReady = Notification.Name(rawValue: "weatherReady")
+}

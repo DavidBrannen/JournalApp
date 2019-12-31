@@ -29,6 +29,7 @@ class TableViewController: UITableViewController {
         self.title = "Entries"
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationWeatherReady(notification:)), name: Notifications.notificationWeatherReady, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,6 +53,12 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
+        @objc func notificationWeatherReady(notification: Notification) {
+            print("note recieved")
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
 }
 
 extension TableViewController {
