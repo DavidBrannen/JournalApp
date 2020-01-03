@@ -11,6 +11,14 @@ import CoreData
 
 class ViewModel {
     var arrayOfCityDayWeathers: [CityDayWeather] = []
+    let addItemViewController: AddItemViewController
+    let tableViewController: TableViewController
+    let persistenceManager: PersistenceManager
+    init (addItemViewController: AddItemViewController, tableViewController: TableViewController, persistenceManager: PersistenceManager) {
+        self.addItemViewController = addItemViewController
+        self.tableViewController = tableViewController
+        self.persistenceManager = persistenceManager
+    }
     
     func fetchWeather(items: [NSManagedObject]) -> [NSManagedObject] {
         for index in items.indices {
@@ -61,6 +69,44 @@ class ViewModel {
         let dateformat = DateFormatter()
         dateformat.dateFormat = "yyyy/MM/dd"
         return dateformat.string(from: dateDate)
-        
     }
+    
+    ///Addition screen
+    let homeMetroplex = "atlanta"
+
+    func addEntrySetup() {
+        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
+        let results: Array = persistenceManager.fetch(Item.self, sort: sort);
+        addItemViewController.metroplex.text = results[0].city ?? homeMetroplex
+    }
+    func addItem() {
+        var items: [NSManagedObject] = []
+        let metroplex = addItemViewController.metroplex.text ?? homeMetroplex
+        let occurrenceDate = addItemViewController.occurrenceDate.text
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yy"
+        let currentDate = formatter.string(from: date)
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.timeStyle = .short
+        let currentTime = timeFormatter.string(from: date)
+        
+        guard let entryText = addItemViewController.itemEntryTextView?.text else {
+            return
+        }
+        let item = Item(context: persistenceManager.context)
+        item.setValue(occurrenceDate, forKey: "occurrenceDate")
+        item.setValue(metroplex, forKey: "city")
+        item.setValue(currentDate, forKey: "date")
+        item.setValue(currentTime, forKey: "time")
+        item.setValue(entryText, forKey: "entry")
+        item.setValue(Date(), forKey: "timestamp")
+
+        items.append(item)
+        persistenceManager.save()
+
+    }
+
 }

@@ -28,6 +28,18 @@ struct CityDayWeather : Codable {
     let visibility          :  Float?
     let predictability      :  Int
 }
+
+struct WeatherCity : Codable {
+    let consolidated_weather : [CityForWeather]
+}
+struct CityForWeather : Codable {
+    let title               : String
+    let location_type       : String
+    let woeid               : NSInteger
+    let latt_long           : String
+}
+
+
 class Notifications {
     static let notificationWeatherReady = Notification.Name(rawValue: "weatherReady")
 }

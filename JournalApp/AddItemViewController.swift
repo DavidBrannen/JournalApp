@@ -10,8 +10,17 @@ import UIKit
 import CoreData
 
 class AddItemViewController: UIViewController, UITextViewDelegate {
+    
+    @IBOutlet weak var occurrenceDate: UITextField!
+    @IBOutlet weak var metroplex: UITextField!
+    @IBOutlet weak var itemEntryTextView: UITextView!
+    let emtyEntryAlertTitle = "Please Type Something"
+    let emtyEntryAlertMessage = "Your entry was left blank."
+    let emtyEntryAlertActionTitle = "Okay"
+    let homeMetroplex = "atlanta"
+
     let persistenceManager: PersistenceManager
-    init(persistenceManager: PersistenceManager) {
+    init(viewModel: ViewModel, persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,14 +28,25 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-
-    @IBOutlet weak var itemEntryTextView: UITextView!
     
-    @IBAction func cancel(_ sender: UIButton) {
-         dismiss(animated: true, completion: nil)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        itemEntryTextView?.delegate = self
+        var viewModel: ViewModel?
+        addEntrySetup()
     }
-    
-    @IBAction func saveContact(_ sender: Any) {
+    func addEntrySetup() {
+        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
+        let results: Array = persistenceManager.fetch(Item.self, sort: sort);
+        metroplex.text = results[0].city ?? homeMetroplex
+
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yy"
+        occurrenceDate.text = formatter.string(from: date)
+    }
+
+    @IBAction func saveContactButton(_ sender: Any) {
         var items: [NSManagedObject] = []
         
         guard let enteredText = itemEntryTextView?.text else {
@@ -35,12 +55,13 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         
         if enteredText.isEmpty || itemEntryTextView?.text == "Type anything..."{
             
-            let alert = UIAlertController(title: "Please Type Something", message: "Your entry was left blank.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default) { action in })
+            let alert = UIAlertController(title: emtyEntryAlertTitle, message: emtyEntryAlertMessage, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: emtyEntryAlertTitle, style: .default) { action in })
             self.present(alert, animated: true, completion: nil)
             
         } else {
-            
+            let city = metroplex.text
+            let oDate = occurrenceDate.text
             let date = Date()
             let formatter = DateFormatter()
             formatter.dateFormat = "MM/dd/yy"
@@ -53,6 +74,8 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
                 return
             }
             let item = Item(context: persistenceManager.context)
+            item.setValue(city, forKey: "city")
+            item.setValue(oDate, forKey: "occuranceDate")
             item.setValue(currentDate, forKey: "date")
             item.setValue(currentTime, forKey: "time")
             item.setValue(entryText, forKey: "entry")
@@ -62,11 +85,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             persistenceManager.save()
         }        
         dismiss(animated: true, completion: nil)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        itemEntryTextView?.delegate = self
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -80,6 +98,10 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             return false
         }
         return true
+    }
+    
+    @IBAction func cancel(_ sender: UIButton) {
+         dismiss(animated: true, completion: nil)
     }
 }
 

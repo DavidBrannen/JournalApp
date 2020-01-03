@@ -23,19 +23,19 @@ class TableViewController: UITableViewController {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
-        self.tableView.estimatedRowHeight = 44
+//        self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
         NotificationCenter.default.addObserver(self, selector: #selector(notificationWeatherReady(notification:)), name: Notifications.notificationWeatherReady, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-/// loads any offline data & reloads the UI
+        /// loads any offline data & reloads the UI
         fetchData()
-/// downloads weather data from your remote & reloads UI
+        /// downloads weather data from your remote & reloads UI
         fetchWeather()
     }
     
@@ -46,20 +46,104 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
+//    var viewModel: ViewModel?
     func fetchWeather() {
-        let viewModel: ViewModel = ViewModel()
-        items = viewModel.fetchWeather(items: items)
+        items = self.fetchWeather2MoveLater(items: items)
+        //        items = viewModel?.fetchWeather(items: items) ?? []
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
-        @objc func notificationWeatherReady(notification: Notification) {
-            print("note recieved")
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+    @objc func notificationWeatherReady(notification: Notification) {
+        print("note recieved")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    func fetchWeather2MoveLater(items: [NSManagedObject]) -> [NSManagedObject] {
+        for index in items.indices {
+            var locationNumber = "2357024"
+            var wDate = items[index].value(forKeyPath: "date") as! String
+            wDate = convertDateFormater(wDate)
+///get location number
+            if let wCity = items[index].value(forKeyPath: "city") as? String {
+                locationNumber = getLocationNumber(city: wCity.lowercased())
+                print("got", locationNumber, "from", wCity.lowercased())
+            }
+///use location number
+            var request = "https://www.metaweather.com/api/location/" + locationNumber + "/"
+            request = request  + wDate + "/"
+            guard let url = URL(string: request) else {return items}
+            let session = URLSession.shared
+            let dataTask = session.dataTask(with: url) { (data, response, error) in
+                if error != nil { print(error!); return}
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    print(response!)
+                    return
+                }
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+/// once data is received & serialized, place within structure
+                        var arrayOfCityDayWeathers: Array<CityDayWeather>
+                        arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
+                        if let item = items[index] as? Item {
+                            if arrayOfCityDayWeathers.count > 0 {
+                                item.weather_state_name = arrayOfCityDayWeathers[0].weather_state_name
+                            }
+                        }
+                    } catch let error {
+                        print("Parsing Failed \(error.localizedDescription)")
+                    }
+                }
+            }
+            dataTask.resume()
+        }
+        NotificationCenter.default.post(name: Notifications.notificationWeatherReady, object: nil)
+        return items
+    }
+    func convertDateFormater(_ date: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MM/dd/yy"
+        let dateDate = dateFormatterGet.date(from: date)!
+        let dateformat = DateFormatter()
+        dateformat.dateFormat = "yyyy/MM/dd"
+        return dateformat.string(from: dateDate)
+    }
+    func getLocationNumber(city: String) -> String {
+        if city == "2357024" {return "2357024"}
+        var cityNumber = "2357024"
+        let request = "https://www.metaweather.com/api/location/search/?query=" + city
+        guard let url = URL(string: request) else {return cityNumber}
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: url) { (data, response, error) in
+            if error != nil { print(error!); return}
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                print(response!)
+                return
+            }
+            if let data = data {
+                let decoder = JSONDecoder()
+                do {
+/// once data is received & serialized, return with locationNumber = cityNumber
+                    var WeatherCity: Array<CityForWeather>
+                    WeatherCity = try decoder.decode([CityForWeather].self, from: data)
+                    if WeatherCity.count > 0 {
+                        cityNumber = String (WeatherCity[0].woeid)
+                        print("found", cityNumber)
+                    }
+                } catch let error {
+                    print("Parsing Failed \(error.localizedDescription)")
+                }
             }
         }
+        dataTask.resume()
+        return cityNumber
+    }
+    
 }
+
+
 
 extension TableViewController {
     
@@ -74,9 +158,11 @@ extension TableViewController {
         if let date = item.date, let time = item.time {
             timeStamp = "Added \(date) at \(time)"
         }
-        cell.entryLabel.text   = item.entry
-        cell.timeLabel.text    = timeStamp
-        cell.weatherState.text = item.weather_state_name
+        cell.entryLabel.text     = item.entry
+        cell.timeLabel.text      = timeStamp
+        cell.weatherState.text   = item.weather_state_name
+        cell.occurrenceDate.text = item.occuranceDate
+        cell.city.text           = item.city
         
         return cell
     }
