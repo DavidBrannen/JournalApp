@@ -75,7 +75,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             }
             let item = Item(context: persistenceManager.context)
             item.setValue(city, forKey: "city")
-            item.setValue(oDate, forKey: "occuranceDate")
+            item.setValue(oDate, forKey: "occurrenceDate")
             item.setValue(currentDate, forKey: "date")
             item.setValue(currentTime, forKey: "time")
             item.setValue(entryText, forKey: "entry")
