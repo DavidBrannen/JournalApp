@@ -28,7 +28,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-    
+  // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         itemEntryTextView?.delegate = self
@@ -45,7 +45,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         formatter.dateFormat = "MM/dd/yy"
         occurrenceDate.text = formatter.string(from: date)
     }
-
+  // MARK: - Buttons
     @IBAction func saveContactButton(_ sender: Any) {
         var items: [NSManagedObject] = []
         
@@ -86,7 +86,11 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         }        
         dismiss(animated: true, completion: nil)
     }
+    @IBAction func cancel(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
     
+      // MARK: - textView
     func textViewDidBeginEditing(_ textView: UITextView) {
         textView.text = ""
         textView.textColor = UIColor.black
@@ -98,10 +102,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             return false
         }
         return true
-    }
-    
-    @IBAction func cancel(_ sender: UIButton) {
-         dismiss(animated: true, completion: nil)
     }
 }
 

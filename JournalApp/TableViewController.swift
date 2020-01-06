@@ -14,6 +14,7 @@ class TableViewController: UITableViewController {
     
     let cellId = "Cell"
     var items: [NSManagedObject] = []
+    let downloadLock = NSLock()
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
@@ -23,7 +24,8 @@ class TableViewController: UITableViewController {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-    
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
@@ -34,33 +36,28 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         /// loads any offline data & reloads the UI
         fetchData()
-        
-        let syncQueue = DispatchQueue(label: "syncWeatherQueue")
-        //        syncQueue.sync {
         ///update cityNumber
-        syncQueue.sync {[weak self] in
-            guard let self = self else {return}
-            self.updateCityNumber()
-            print("city Number")
-        }
+        downloadLock.lock()
+        let group = DispatchGroup()
+        group.enter()
+        self.updateCityNumber()
+        print("city Number")
+        group.leave()
         ///update urlWeatherCityNumberDate
-        syncQueue.sync {[weak self] in
-            guard let self = self else {return}
+        group.notify (queue: .global()) {
             self.updateURLWeatherCityNumberDate()
             print("url")
-        }
         /// downloads weather data from your remote & reloads UI
-        syncQueue.sync {[weak self] in
-            guard let self = self else {return}
             self.fetchWeather()
             print("Weather")
+            self.downloadLock.unlock()
         }
         DispatchQueue.main.async {
             self.tableView.reloadData()
             print("complete")
         }
     }
-    
+  // MARK: - Data Fetch
     func fetchData() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
         items = persistenceManager.fetch(Item.self, sort: sort)
@@ -73,7 +70,7 @@ class TableViewController: UITableViewController {
         for index in items.indices {
             if let wCity = (items[index].value(forKeyPath: "city") as? String)?.lowercased(){
                 var cityNum = "2357024" //default
-                let requestCity = "https://www.metaweather.com/api/location/search/?query=" + wCity
+                let requestCity = "https://www.metaweather.com/api/location/search/?query=\(wCity)"
                 guard let url = URL(string: requestCity) else {return}
                 let session = URLSession.shared
                 let dataTask = session.dataTask(with: url) { (data, response, error) in
@@ -127,8 +124,7 @@ class TableViewController: UITableViewController {
                 oDate = (items[index].value(forKey: "date") as? String)!
                 oDate = convertDateFormater(oDate)
             }
-            var urlWeather = "https://www.metaweather.com/api/location/" + cityNum
-            urlWeather = urlWeather + "/" + oDate + "/"
+            let urlWeather = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
             items[index].setValue(urlWeather, forKey: "urlWeatherCityNumberDate")
 //            print(index, urlWeather, items[index].value(forKey: "city"))
         }
@@ -182,8 +178,8 @@ class TableViewController: UITableViewController {
         return dateformat.string(from: dateDate)
     }
     func getDayWeatherURL(city: String, wDate: String) -> String {
-        var returnValue = "https://www.metaweather.com/api/location/" + city + "/" + wDate + "/"
-        let requestCity = "https://www.metaweather.com/api/location/search/?query=" + city
+        var returnValue = "https://www.metaweather.com/api/location/\(city)/\(wDate)/"
+        let requestCity = "https://www.metaweather.com/api/location/search/?query=\(city)"
         guard let url = URL(string: requestCity) else {return ""}
         let session = URLSession.shared
         let dataTask = session.dataTask(with: url) { (data, response, error) in
@@ -201,11 +197,11 @@ class TableViewController: UITableViewController {
                     WeatherCity = try decoder.decode([CityForWeather].self, from: data)
                     if WeatherCity.count > 0 {
                         cityNumber = String(WeatherCity[0].woeid)
-                        print("found???????????", "https://www.metaweather.com/api/location/" + cityNumber + "/" + wDate + "/")
+                        print("found???????????", "https://www.metaweather.com/api/location/\(cityNumber)/\(wDate)/")
                     } else {
                         cityNumber = "2357024"
                     }
-                    returnValue = "https://www.metaweather.com/api/location/" + cityNumber + "/" + wDate + "/"
+                    returnValue = "https://www.metaweather.com/api/location/\(cityNumber)/\(wDate)/"
                 } catch let error {
                     print("Parsing Failed \(error.localizedDescription)")
                 }
@@ -217,7 +213,7 @@ class TableViewController: UITableViewController {
     
 }
 
-
+  // MARK: - tableview data source
 
 extension TableViewController {
     
