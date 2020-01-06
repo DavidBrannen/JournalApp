@@ -24,37 +24,38 @@ class TableViewController: UITableViewController {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-
+    typealias VoidCompletion = () -> Void
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
         self.tableView.rowHeight = UITableView.automaticDimension
-        NotificationCenter.default.addObserver(self, selector: #selector(notificationWeatherReady(notification:)), name: Notifications.notificationWeatherReady, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(notificationWeatherReady(notification:)), name: Notifications.notificationWeatherReady, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         /// loads any offline data & reloads the UI
         fetchData()
         ///update cityNumber
-        downloadLock.lock()
+        ///update urlWeatherCityNumberDate
         let group = DispatchGroup()
         group.enter()
-        self.updateCityNumber()
-        print("city Number")
-        group.leave()
-        ///update urlWeatherCityNumberDate
-        group.notify (queue: .global()) {
-            self.updateURLWeatherCityNumberDate()
-            print("url")
-        /// downloads weather data from your remote & reloads UI
-            self.fetchWeather()
-            print("Weather")
-            self.downloadLock.unlock()
+        DispatchQueue.global(qos: .userInteractive).sync {
+            self.updateCityNumber()
+            group.leave()
+            print("city Number")
         }
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            print("complete")
+        /// downloads weather data from your remote & reloads UI
+        group.enter()
+        DispatchQueue.global(qos: .utility).sync {
+            self.fetchWeather()
+            group.leave()
+            print("Weather")
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                print("complete")
+            }
         }
     }
   // MARK: - Data Fetch
@@ -66,8 +67,31 @@ class TableViewController: UITableViewController {
         }
     }
     
-    func updateCityNumber () {
+    func updateCityNumber (){ //_ onCompletion: @escaping VoidCompletion) {
         for index in items.indices {
+            var wDate = items[index].value(forKeyPath: "date") as! String
+            wDate = convertDateFormater(wDate)
+            if items[index].value(forKey: "occurrenceDate") != nil {
+                wDate = (items[index].value(forKey: "occurrenceDate") as? String)!
+                wDate = convertDateFormater(wDate)
+                items[index].setValue(wDate, forKey: "occurrenceDate")
+            }
+            var cityNum: String
+            if  (items[index].value(forKey: "cityNumber") != nil) {
+                cityNum = items[index].value(forKey: "cityNumber") as! String
+            } else {
+                cityNum = "2357024"
+            }
+            var oDate: String
+            if items[index].value(forKey: "occurrenceDate") != nil {
+                oDate = items[index].value(forKey: "occurrenceDate") as! String
+            } else {
+                oDate = (items[index].value(forKey: "date") as? String)!
+                oDate = convertDateFormater(oDate)
+            }
+            let urlWeather = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
+            items[index].setValue(urlWeather, forKey: "urlWeatherCityNumberDate")
+
             if let wCity = (items[index].value(forKeyPath: "city") as? String)?.lowercased(){
                 var cityNum = "2357024" //default
                 let requestCity = "https://www.metaweather.com/api/location/search/?query=\(wCity)"
@@ -96,40 +120,13 @@ class TableViewController: UITableViewController {
                         }
                     }
                 }
+                
                 dataTask.resume()
-                print ("resume got ciy")
+                print ("resume got city \(wCity)")
             }
             
-            var wDate = items[index].value(forKeyPath: "date") as! String
-            wDate = convertDateFormater(wDate)
-            if items[index].value(forKey: "occurrenceDate") != nil {
-                wDate = (items[index].value(forKey: "occurrenceDate") as? String)!
-                wDate = convertDateFormater(wDate)
-                items[index].setValue(wDate, forKey: "occurrenceDate")
-            }
         }
-    }
-    func updateURLWeatherCityNumberDate() {
-        for index in items.indices {
-            var cityNum: String
-            if  (items[index].value(forKey: "cityNumber") != nil) {
-                cityNum = items[index].value(forKey: "cityNumber") as! String
-            } else {
-                cityNum = "2357024"
-            }
-            var oDate: String
-            if items[index].value(forKey: "occurrenceDate") != nil {
-                oDate = items[index].value(forKey: "occurrenceDate") as! String
-            } else {
-                oDate = (items[index].value(forKey: "date") as? String)!
-                oDate = convertDateFormater(oDate)
-            }
-            let urlWeather = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
-            items[index].setValue(urlWeather, forKey: "urlWeatherCityNumberDate")
-//            print(index, urlWeather, items[index].value(forKey: "city"))
-        }
-        print ("added urls")
-
+//        NotificationCenter.default.post(name: Notifications.notificationWeatherReady, object: nil)
     }
     @objc func notificationWeatherReady(notification: Notification) {
         print("note recieved")
@@ -137,11 +134,13 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
+
     func fetchWeather() {
         for index in items.indices {
             //use request
             let request = items[index].value(forKey: "urlWeatherCityNumberDate") as! String
             guard let url = URL(string: request) else {return }
+            print(request)
             let session = URLSession.shared
             let dataTask = session.dataTask(with: url) { (data, response, error) in
                 if error != nil { print(error!); return}
@@ -167,7 +166,6 @@ class TableViewController: UITableViewController {
             }
             dataTask.resume()
         }
-        NotificationCenter.default.post(name: Notifications.notificationWeatherReady, object: nil)
     }
     func convertDateFormater(_ date: String) -> String {
         let dateFormatterGet = DateFormatter()
@@ -176,39 +174,6 @@ class TableViewController: UITableViewController {
         let dateformat = DateFormatter()
         dateformat.dateFormat = "yyyy/MM/dd"
         return dateformat.string(from: dateDate)
-    }
-    func getDayWeatherURL(city: String, wDate: String) -> String {
-        var returnValue = "https://www.metaweather.com/api/location/\(city)/\(wDate)/"
-        let requestCity = "https://www.metaweather.com/api/location/search/?query=\(city)"
-        guard let url = URL(string: requestCity) else {return ""}
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: url) { (data, response, error) in
-            if error != nil { print(error!); return}
-            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                print(response!)
-                return
-            }
-            if let data = data {
-                let decoder = JSONDecoder()
-                do {
-                    /// once data is received & serialized, return with locationNumber = cityNumber
-                    var WeatherCity: Array<CityForWeather>
-                    var cityNumber = "400"
-                    WeatherCity = try decoder.decode([CityForWeather].self, from: data)
-                    if WeatherCity.count > 0 {
-                        cityNumber = String(WeatherCity[0].woeid)
-                        print("found???????????", "https://www.metaweather.com/api/location/\(cityNumber)/\(wDate)/")
-                    } else {
-                        cityNumber = "2357024"
-                    }
-                    returnValue = "https://www.metaweather.com/api/location/\(cityNumber)/\(wDate)/"
-                } catch let error {
-                    print("Parsing Failed \(error.localizedDescription)")
-                }
-            }
-        }
-        dataTask.resume()
-        return returnValue
     }
     
 }
