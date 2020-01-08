@@ -38,7 +38,12 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     func addEntrySetup() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
         let results: Array = persistenceManager.fetch(Item.self, sort: sort);
-        metroplex.text = results[0].city ?? homeMetroplex
+        if let first = results.first, let city = first.city {
+            metroplex.text = city
+        }
+        else {
+            metroplex.text = homeMetroplex
+        }
 
         let date = Date()
         let formatter = DateFormatter()
