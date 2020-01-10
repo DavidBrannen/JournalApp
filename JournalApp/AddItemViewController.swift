@@ -18,6 +18,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     let emtyEntryAlertMessage = "Your entry was left blank."
     let emtyEntryAlertActionTitle = "Okay"
     let homeMetroplex = "atlanta"
+    private var datePicker = UIDatePicker()
 
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {
@@ -31,8 +32,26 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
   // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(self.dateChanged(datePicker:)), for: .valueChanged)
+        occurrenceDate.inputView = datePicker
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped(gesterRecognizer:)))
+        view.addGestureRecognizer(tapGesture)
+        
         itemEntryTextView?.delegate = self
         addEntrySetup()
+    }
+    @objc func dateChanged(datePicker: UIDatePicker) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yy"
+        occurrenceDate.text = dateFormatter.string(from: datePicker.date)
+        
+        view.endEditing(true)
+    }
+    @objc func viewTapped(gesterRecognizer: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     func addEntrySetup() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
@@ -43,11 +62,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         else {
             metroplex.text = homeMetroplex
         }
-
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yy"
-        occurrenceDate.text = formatter.string(from: date)
     }
   // MARK: - Buttons
     @IBAction func saveContactButton(_ sender: Any) {
@@ -64,8 +78,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             self.present(alert, animated: true, completion: nil)
             
         } else {
-            let city = metroplex.text
-            let oDate = occurrenceDate.text
             let date = Date()
             let formatter = DateFormatter()
             formatter.dateFormat = "MM/dd/yy"
@@ -73,7 +85,12 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             let timeFormatter = DateFormatter()
             timeFormatter.timeStyle = .short
             let currentTime = timeFormatter.string(from: date)
-            
+            let oDate: String
+            if occurrenceDate.text == "" || occurrenceDate.text == nil {
+                oDate = currentDate } else {
+                oDate = occurrenceDate.text ?? ""
+            }
+            let city = metroplex.text
             guard let entryText = itemEntryTextView?.text else {
                 return
             }

@@ -47,33 +47,14 @@ extension TableViewController {
     //transform / check data / may only need in changes or additions
     func transformData() {
         for index in items.indices  {
-            var wDate = ""
-            if items[index].value(forKey: "occurrenceDate") != nil {
-                wDate = (items[index].value(forKey: "occurrenceDate") as? String)!
-                print((items[index].value(forKey: "date") as? String)!, wDate, "not nil")
-                wDate = convertDateFormater(wDate)
-                print(wDate, "transformed")
-                items[index].setValue(wDate, forKey: "occurrenceDate")
-            } else {
-                wDate = items[index].value(forKeyPath: "date") as! String
-                wDate = convertDateFormater(wDate)
-                print(wDate, "nil")
-                items[index].setValue(wDate, forKey: "occurrenceDate")            }
-            var cityNum: String
-            if  (items[index].value(forKey: "cityNumber") != nil) {
-                cityNum = items[index].value(forKey: "cityNumber") as! String
-            } else {
-                cityNum = "2357024"
-            }
-            var oDate: String
-            if items[index].value(forKey: "occurrenceDate") != nil {
-                oDate = items[index].value(forKey: "occurrenceDate") as! String
-            } else {
-                oDate = (items[index].value(forKey: "date") as? String)!
-                oDate = convertDateFormater(oDate)
-            }
-            let urlWeather = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
-            items[index].setValue(urlWeather, forKey: "urlWeatherCityNumberDate")
+
+//            var oDate: String
+//            if items[index].value(forKey: "occurrenceDate") != nil {
+//                oDate = items[index].value(forKey: "occurrenceDate") as! String
+//            } else {
+//                oDate = (items[index].value(forKey: "date") as? String)!
+//                items[index].setValue(oDate, forKey: "occurrenceDate")
+//            }
         }
         fetchCityNumber()
     }
@@ -107,7 +88,6 @@ extension TableViewController {
                                 cityNum = String(WeatherCity[0].woeid)
                             }
                             self.items[index].setValue(cityNum, forKey: "cityNumber")
-                            print(index, cityNum)
                         } catch let error {
                             print("Parsing Failed \(error.localizedDescription)")
                         }
@@ -116,7 +96,7 @@ extension TableViewController {
                 }
                 dataTask.resume()
                 group.notify(queue: .main) {
-                    print ("resume got city \(wCity)")
+//                    print ("resume got city \(wCity)")
                     self.fetchWeatherFromRemote()
                 }
             }
@@ -131,13 +111,19 @@ extension TableViewController {
         for index in items.indices {
             // we already have the weather state name, don't continue.
             guard let item = items[index] as? Item, item.weather_state_name == nil else { continue }
-            
-            // if we don't, do continue, and fetch the weather state name.
-            //use request
-            
+            if item.value(forKey: "urlWeatherCityNumberDate") != nil {
+                continue
+            }
+//"https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
+            let oDate = self.convertDateFormater((self.items[index].value(forKey: "occurrenceDate") as! String), inFormat: "MM/dd/yy")
+            let cityNum = self.items[index].value(forKey: "cityNumber") as! String
+            let weatherURL = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
+            self.items[index].setValue(weatherURL, forKey: "urlWeatherCityNumberDate")
+            guard let request = item.value(forKey: "urlWeatherCityNumberDate") as? String else {
+                continue
+            }
             // 2. enter the group for each task
             group.enter()
-            let request = item.value(forKey: "urlWeatherCityNumberDate") as! String
             guard let url = URL(string: request) else { return }
             let dataTask = session.dataTask(with: url) { (data, response, error) in
                 if error != nil { print(error!); return}
@@ -152,7 +138,8 @@ extension TableViewController {
                     var cityDayWeathers: Array<CityDayWeather>
                     cityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
                     if cityDayWeathers.isEmpty == false {
-                        let state = cityDayWeathers[0].weather_state_name
+                        let mid = (cityDayWeathers.count / 2) as NSInteger
+                        let state = cityDayWeathers[mid].weather_state_name
                         self.items[index].setValue(state, forKey: "weather_state_name")
                     }
                 } catch let error {
@@ -170,9 +157,9 @@ extension TableViewController {
             self.reloadUI()
         }
     }
-    func convertDateFormater(_ date: String) -> String {
+    func convertDateFormater(_ date: String, inFormat: String) -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "MM/dd/yy"
+        dateFormatterGet.dateFormat = inFormat
         let dateDate = dateFormatterGet.date(from: date) ?? Date()
         let dateformat = DateFormatter()
         dateformat.dateFormat = "yyyy/MM/dd"
