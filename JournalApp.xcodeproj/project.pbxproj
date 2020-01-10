@@ -18,7 +18,6 @@
 		0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA2F239AB593005C34C8 /* AddItemViewController.swift */; };
 		0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */; };
 		0405BA5E23A5DD1A005C34C8 /* JournalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */; };
-		0409BC0D23BA8F0700DB8C3E /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0409BC0C23BA8F0700DB8C3E /* ViewModel.swift */; };
 		0409BC1123C67EDC00DB8C3E /* TableViewController+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */; };
 		043D16DF23B80FA0006A602D /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043D16DE23B80FA0006A602D /* PersistenceManager.swift */; };
 		046BC11A23B260CC0054C06B /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046BC11923B260CC0054C06B /* WeatherModel.swift */; };
@@ -59,7 +58,6 @@
 		0405BA2F239AB593005C34C8 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
 		0405BA32239B0C0C005C34C8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalCell.swift; sourceTree = "<group>"; };
-		0409BC0C23BA8F0700DB8C3E /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewController+Fetch.swift"; sourceTree = "<group>"; };
 		043D16DE23B80FA0006A602D /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		046BC10F23AAC76C0054C06B /* Model v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model v2.xcdatamodel"; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
 				0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */,
 				0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */,
-				0409BC0C23BA8F0700DB8C3E /* ViewModel.swift */,
 				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
 			);
 			path = JournalApp;
@@ -290,7 +287,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */,
-				0409BC0D23BA8F0700DB8C3E /* ViewModel.swift in Sources */,
 				0409BC1123C67EDC00DB8C3E /* TableViewController+Fetch.swift in Sources */,
 				0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */,
 				0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */,

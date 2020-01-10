@@ -31,10 +31,11 @@ import UIKit
  3 -> 2/1
  
  NSOperations/DispatchGroup
- 
  */
 //  TableViewController+Fetch.swift
+
 extension TableViewController {
+    
     // MARK: - Data Fetch
     func fetchData() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
@@ -46,13 +47,18 @@ extension TableViewController {
     //transform / check data / may only need in changes or additions
     func transformData() {
         for index in items.indices  {
-            var wDate = items[index].value(forKeyPath: "date") as! String
-            wDate = convertDateFormater(wDate)
+            var wDate = ""
             if items[index].value(forKey: "occurrenceDate") != nil {
                 wDate = (items[index].value(forKey: "occurrenceDate") as? String)!
+                print((items[index].value(forKey: "date") as? String)!, wDate, "not nil")
                 wDate = convertDateFormater(wDate)
+                print(wDate, "transformed")
                 items[index].setValue(wDate, forKey: "occurrenceDate")
-            }
+            } else {
+                wDate = items[index].value(forKeyPath: "date") as! String
+                wDate = convertDateFormater(wDate)
+                print(wDate, "nil")
+                items[index].setValue(wDate, forKey: "occurrenceDate")            }
             var cityNum: String
             if  (items[index].value(forKey: "cityNumber") != nil) {
                 cityNum = items[index].value(forKey: "cityNumber") as! String
@@ -162,38 +168,6 @@ extension TableViewController {
         // 4. declare what action the group will take when all tasks are done
         group.notify(queue: .main) {
             self.reloadUI()
-        }
-    }
-    func fetchWeather() {
-        for index in items.indices {
-            //use request
-            let request = items[index].value(forKey: "urlWeatherCityNumberDate") as! String
-            guard let url = URL(string: request) else {return }
-            print(request)
-            let session = URLSession.shared
-            let dataTask = session.dataTask(with: url) { (data, response, error) in
-                if error != nil { print(error!); return}
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                    print(response!)
-                    return
-                }
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    do {
-                        /// once data is received & serialized, place within structure
-                        var arrayOfCityDayWeathers: Array<CityDayWeather>
-                        arrayOfCityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
-                        if arrayOfCityDayWeathers.count > 0 {
-                            let state = arrayOfCityDayWeathers[0].weather_state_name
-                            self.items[index].setValue(state, forKey: "weather_state_name")
-                            //                            print(index ,state)
-                        }
-                    } catch let error {
-                        print("Parsing Failed \(error.localizedDescription)")
-                    }
-                }
-            }
-            dataTask.resume()
         }
     }
     func convertDateFormater(_ date: String) -> String {

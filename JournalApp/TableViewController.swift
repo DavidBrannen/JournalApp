@@ -26,7 +26,6 @@ class TableViewController: UITableViewController {
         persistenceManager = PersistenceManager.shared
         super.init(coder: aDecoder)
     }
-    typealias VoidCompletion = () -> Void
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -39,13 +38,9 @@ class TableViewController: UITableViewController {
         super.viewWillAppear(animated)
         fetchData()
         transformData()
-    }    
-//}
+    }
 
-  // MARK: - tableview data source
-
-//extension TableViewController {
-    
+    // MARK: - tableview data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }

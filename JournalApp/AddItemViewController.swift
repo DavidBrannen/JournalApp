@@ -20,7 +20,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     let homeMetroplex = "atlanta"
 
     let persistenceManager: PersistenceManager
-    init(viewModel: ViewModel, persistenceManager: PersistenceManager) {
+    init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,7 +32,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         itemEntryTextView?.delegate = self
-        var viewModel: ViewModel?
         addEntrySetup()
     }
     func addEntrySetup() {
