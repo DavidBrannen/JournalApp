@@ -37,7 +37,7 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
-        transformData()
+        fetchCityNumber()
     }
 
     // MARK: - tableview data source

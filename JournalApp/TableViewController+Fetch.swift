@@ -10,17 +10,9 @@ import UIKit
 
 /*
  1. load offline data /* then reload UI */
- 2. updateCityNumber
- 
- 3.modify_data_and_update_data_and_update_ui_and_fetch_network_data
- 1. Fetch Data
- 2. Transform Data
- modify_data_and_fetch_network_data
- 
+
+ 3. updateCityNumber
  4. fetch_weather_from_remote
- 1. Fetch Data
- 2. Transform Data
- 
  5. Save Data // update_data
  6. Reload UI // and_reload_ui
  
@@ -28,11 +20,8 @@ import UIKit
  
  6 -> 4 (many actions)
  4 -> 3
- 3 -> 2/1
- 
- NSOperations/DispatchGroup
+ 3 -> 1
  */
-//  TableViewController+Fetch.swift
 
 extension TableViewController {
     
@@ -43,20 +32,6 @@ extension TableViewController {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
-    //transform / check data / may only need in changes or additions
-    func transformData() {
-        for index in items.indices  {
-
-//            var oDate: String
-//            if items[index].value(forKey: "occurrenceDate") != nil {
-//                oDate = items[index].value(forKey: "occurrenceDate") as! String
-//            } else {
-//                oDate = (items[index].value(forKey: "date") as? String)!
-//                items[index].setValue(oDate, forKey: "occurrenceDate")
-//            }
-        }
-        fetchCityNumber()
     }
     
     func fetchCityNumber() {
@@ -96,7 +71,6 @@ extension TableViewController {
                 }
                 dataTask.resume()
                 group.notify(queue: .main) {
-//                    print ("resume got city \(wCity)")
                     self.fetchWeatherFromRemote()
                 }
             }
@@ -171,7 +145,6 @@ extension TableViewController {
         DispatchQueue.main.async {
             // self.persistenceManager.save()
             self.tableView.reloadData()
-            print("complete")
         }
     }
     

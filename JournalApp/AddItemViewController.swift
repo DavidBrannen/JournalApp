@@ -18,7 +18,11 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     let emtyEntryAlertMessage = "Your entry was left blank."
     let emtyEntryAlertActionTitle = "Okay"
     let homeMetroplex = "atlanta"
+    var urlCityNum = ""
+    var urlODate = ""
     private var datePicker = UIDatePicker()
+    let session = URLSession(configuration: .default)
+
 
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {
@@ -32,28 +36,30 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
   // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        itemEntryTextView?.delegate = self
+        addDatePicker()
+        newEntrySetup()
+    }
+    
+    func addDatePicker() {
         datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(self.dateChanged(datePicker:)), for: .valueChanged)
         occurrenceDate.inputView = datePicker
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped(gesterRecognizer:)))
         view.addGestureRecognizer(tapGesture)
-        
-        itemEntryTextView?.delegate = self
-        addEntrySetup()
     }
     @objc func dateChanged(datePicker: UIDatePicker) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yy"
         occurrenceDate.text = dateFormatter.string(from: datePicker.date)
-        
         view.endEditing(true)
     }
     @objc func viewTapped(gesterRecognizer: UITapGestureRecognizer) {
         view.endEditing(true)
     }
-    func addEntrySetup() {
+    
+    func newEntrySetup() {
         let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
         let results: Array = persistenceManager.fetch(Item.self, sort: sort);
         if let first = results.first, let city = first.city {
@@ -63,9 +69,9 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             metroplex.text = homeMetroplex
         }
     }
+    
   // MARK: - Buttons
     @IBAction func saveContactButton(_ sender: Any) {
-        var items: [NSManagedObject] = []
         
         guard let enteredText = itemEntryTextView?.text else {
             return
@@ -78,35 +84,12 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             self.present(alert, animated: true, completion: nil)
             
         } else {
-            let date = Date()
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/yy"
-            let currentDate = formatter.string(from: date)
-            let timeFormatter = DateFormatter()
-            timeFormatter.timeStyle = .short
-            let currentTime = timeFormatter.string(from: date)
-            let oDate: String
-            if occurrenceDate.text == "" || occurrenceDate.text == nil {
-                oDate = currentDate } else {
-                oDate = occurrenceDate.text ?? ""
-            }
-            let city = metroplex.text
-            guard let entryText = itemEntryTextView?.text else {
-                return
-            }
-            let item = Item(context: persistenceManager.context)
-            item.setValue(city, forKey: "city")
-            item.setValue(oDate, forKey: "occurrenceDate")
-            item.setValue(currentDate, forKey: "date")
-            item.setValue(currentTime, forKey: "time")
-            item.setValue(entryText, forKey: "entry")
-            item.setValue(Date(), forKey: "timestamp")
-
-            items.append(item)
-            persistenceManager.save()
-        }        
+            newData()
+            fetchCityNumberNew()
+        }
         dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func cancel(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
