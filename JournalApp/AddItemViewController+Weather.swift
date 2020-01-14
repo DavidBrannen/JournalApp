@@ -48,9 +48,9 @@ extension AddItemViewController {
         item.setValue(currentTime, forKey: "time")
         item.setValue(entryText, forKey: "entry")
         item.setValue(Date(), forKey: "timestamp")
-        DispatchQueue.main.async {
-            self.persistenceManager.save()
-        }
+//        DispatchQueue.main.async {
+//            self.persistenceManager.save()
+//        }
     }
     
     func fetchCityNumberNew() {

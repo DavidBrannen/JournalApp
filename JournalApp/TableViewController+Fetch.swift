@@ -37,6 +37,10 @@ extension TableViewController {
     func fetchCityNumber() {
         let group = DispatchGroup()
         for index in items.indices {
+            //check odate
+            if items[index].value(forKey: "occurrenceDate") == nil || items[index].value(forKey: "occurrenceDate") as? String == "" {
+                self.items[index].setValue(items[index].value(forKey: "date"), forKey: "occurrenceDate")
+            }
             //skip this loop if city number is there / unless there is a change
             if items[index].value(forKey: "cityNumber") != nil {continue}
             if let wCity = (items[index].value(forKeyPath: "city") as? String)?.lowercased(){
@@ -85,11 +89,15 @@ extension TableViewController {
         for index in items.indices {
             // we already have the weather state name, don't continue.
             guard let item = items[index] as? Item, item.weather_state_name == nil else { continue }
-            if item.value(forKey: "urlWeatherCityNumberDate") != nil {
+            if item.value(forKey: "weather_state_name") != nil {
+                continue
+            }
+            if item.value(forKey: "date") == nil { // bad data
                 continue
             }
 //"https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
-            let oDate = self.convertDateFormater((self.items[index].value(forKey: "occurrenceDate") as! String), inFormat: "MM/dd/yy")
+            var oDate = (self.items[index].value(forKey: "occurrenceDate") as! String)
+            oDate = self.convertDateFormater(oDate, inFormat: "MM/dd/yy")
             let cityNum = self.items[index].value(forKey: "cityNumber") as! String
             let weatherURL = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
             self.items[index].setValue(weatherURL, forKey: "urlWeatherCityNumberDate")
