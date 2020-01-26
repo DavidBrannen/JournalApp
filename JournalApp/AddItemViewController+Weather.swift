@@ -22,35 +22,22 @@ import UIKit
  */
 extension AddItemViewController {
     
-    
     func newData() {
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yy"
-        let currentDate = formatter.string(from: date)
+        currentDate = formatter.string(from: date)
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = .short
-        let currentTime = timeFormatter.string(from: date)
-        let oDate: String
+        currentTime = timeFormatter.string(from: date)
         if occurrenceDate.text == "" || occurrenceDate.text == nil {
-            oDate = currentDate } else {
-            oDate = occurrenceDate.text ?? ""
+            oDate = currentDate
+        } else {
+            oDate = occurrenceDate.text ?? currentDate
         }
-        self.urlODate = oDate
-        let city = metroplex.text
-        guard let entryText = itemEntryTextView?.text else {
-            return
-        }
-        let item = Item(context: persistenceManager.context)
-        item.setValue(city, forKey: "city")
-        item.setValue(oDate, forKey: "occurrenceDate")
-        item.setValue(currentDate, forKey: "date")
-        item.setValue(currentTime, forKey: "time")
-        item.setValue(entryText, forKey: "entry")
-        item.setValue(Date(), forKey: "timestamp")
-//        DispatchQueue.main.async {
-//            self.persistenceManager.save()
-//        }
+        urlODate = oDate
+        city = metroplex.text ?? "Atlanta"
+        entryText = itemEntryTextView!.text
     }
     
     func fetchCityNumberNew() {
@@ -77,8 +64,6 @@ extension AddItemViewController {
                         if WeatherCity.count > 0 {
                             self.urlCityNum = String(WeatherCity[0].woeid)
                         }
-                        let item = Item(context: self.persistenceManager.context)
-                        item.setValue(self.urlCityNum, forKey: "cityNumber")
                     } catch let error {
                         print("error in fetchCityNumberNew \(error)")
                     }
@@ -96,9 +81,7 @@ extension AddItemViewController {
         let group = DispatchGroup()
         //"https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
         let oDate = self.convertDateFormater(self.urlODate, inFormat: "MM/dd/yy")
-        let weatherURL = "https://www.metaweather.com/api/location/\(urlCityNum)/\(oDate)/"
-        let item = Item(context: persistenceManager.context)
-        item.setValue(weatherURL, forKey: "urlWeatherCityNumberDate")
+        weatherURL = "https://www.metaweather.com/api/location/\(urlCityNum)/\(oDate)/"
         let request = weatherURL
         print(request)
         // 2. enter the group for each task
@@ -118,9 +101,7 @@ extension AddItemViewController {
                 cityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
                 if cityDayWeathers.isEmpty == false {
                     let mid = (cityDayWeathers.count / 2) as NSInteger
-                    let state = cityDayWeathers[mid].weather_state_name
-                    let item = Item(context: self.persistenceManager.context)
-                    item.setValue(state, forKey: "weather_state_name")
+                    self.state = cityDayWeathers[mid].weather_state_name
                 }
             } catch let error {
                 Swift.print("Parsing Failed \(error.localizedDescription)")
@@ -131,9 +112,19 @@ extension AddItemViewController {
         }
         dataTask.resume()
         
-        
         // 4. declare what action the group will take when all tasks are done
         group.notify(queue: .main) {
+            let item = Item(context: self.persistenceManager.context)
+            item.setValue(self.city, forKey: "city")
+            item.setValue(oDate, forKey: "occurrenceDate")
+            item.setValue(self.currentDate, forKey: "date")
+            item.setValue(self.currentTime, forKey: "time")
+            item.setValue(self.entryText, forKey: "entry")
+            item.setValue(Date(), forKey: "timestamp")
+            item.setValue(self.urlCityNum, forKey: "cityNumber")
+            item.setValue(self.weatherURL, forKey: "urlWeatherCityNumberDate")
+            item.setValue(self.state, forKey: "weather_state_name")
+
             DispatchQueue.main.async {
                 self.persistenceManager.save()
             }
