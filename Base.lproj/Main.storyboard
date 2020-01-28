@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Vl5-KK-kGA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Vl5-KK-kGA">
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -233,27 +233,12 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             </variation>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="stateURLLabel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="nAL-jz-SKE" userLabel="stateURLLabel">
-                                            <rect key="frame" x="564" y="32" width="250" height="20"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="250" id="4DH-hY-lIA"/>
-                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="Hom-IV-Frg"/>
-                                                <constraint firstAttribute="height" constant="20" id="TWa-Qw-dTy"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                            <variation key="heightClass=regular-widthClass=regular">
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            </variation>
-                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="xVV-RJ-22W" firstAttribute="top" secondItem="m5H-9J-Hu1" secondAttribute="top" id="2k9-9h-HEJ"/>
                                         <constraint firstItem="lPe-5a-YoV" firstAttribute="leading" secondItem="sKn-SR-Xar" secondAttribute="trailing" priority="100" constant="201" id="2mK-fp-2JF"/>
                                         <constraint firstItem="csM-ph-p0c" firstAttribute="centerY" secondItem="xVV-RJ-22W" secondAttribute="centerY" id="4Vf-xe-j7u"/>
                                         <constraint firstItem="xVV-RJ-22W" firstAttribute="leading" secondItem="csM-ph-p0c" secondAttribute="trailing" constant="5" id="5Sp-1L-0pB"/>
-                                        <constraint firstAttribute="trailing" secondItem="nAL-jz-SKE" secondAttribute="trailing" constant="20" symbolic="YES" id="89G-Ve-3BX"/>
                                         <constraint firstAttribute="bottom" secondItem="IU5-xe-tve" secondAttribute="bottom" id="J4I-hh-SO3"/>
                                         <constraint firstAttribute="trailing" secondItem="Pqo-iu-ZMx" secondAttribute="trailing" id="Qdg-6w-lkP"/>
                                         <constraint firstItem="IU5-xe-tve" firstAttribute="top" secondItem="Pqo-iu-ZMx" secondAttribute="bottom" constant="5" id="XvF-7P-uco"/>
@@ -270,14 +255,12 @@
                                         <constraint firstAttribute="bottom" secondItem="Trs-mc-uwx" secondAttribute="bottom" id="pMn-N0-osL"/>
                                         <constraint firstItem="csM-ph-p0c" firstAttribute="leading" secondItem="lPe-5a-YoV" secondAttribute="trailing" constant="5" id="qmA-YD-fNZ"/>
                                         <constraint firstItem="Pqo-iu-ZMx" firstAttribute="top" secondItem="m5H-9J-Hu1" secondAttribute="top" constant="20" id="tbx-sX-Zhn"/>
-                                        <constraint firstAttribute="bottom" secondItem="nAL-jz-SKE" secondAttribute="bottom" constant="20" symbolic="YES" id="zJy-rj-fHI"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="city" destination="csM-ph-p0c" id="3IM-Fx-DpI"/>
                                     <outlet property="entryLabel" destination="Pqo-iu-ZMx" id="nDp-D0-C77"/>
                                     <outlet property="occurrenceDate" destination="lPe-5a-YoV" id="Vcc-j5-JRU"/>
-                                    <outlet property="stateAbbrLabel" destination="nAL-jz-SKE" id="4Zh-YQ-aSr"/>
                                     <outlet property="timeLabel" destination="IU5-xe-tve" id="dVF-Se-FgF"/>
                                     <outlet property="weatherImage" destination="Trs-mc-uwx" id="YmQ-oX-sMD"/>
                                     <outlet property="weatherState" destination="xVV-RJ-22W" id="lev-Fd-goa"/>
@@ -299,7 +282,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c5g-qL-MGV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1841.7266187050361" y="118.09045226130654"/>
+            <point key="canvasLocation" x="1842.0289855072465" y="118.52678571428571"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="i0V-04-f6H">
