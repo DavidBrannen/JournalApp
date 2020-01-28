@@ -30,6 +30,8 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     var weatherURL  = ""
     var state       = ""
     var state_abbr  = ""
+    
+    weak var delegate: ReloadProtocol?
 
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {

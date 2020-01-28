@@ -13,6 +13,17 @@ import UIKit
 import CoreData
 import SDWebImage
 
+protocol ReloadProtocol: AnyObject {
+    func reload()
+}
+
+extension TableViewController: ReloadProtocol {
+    func reload() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+}
 
 class TableViewController: UITableViewController {
     
@@ -41,7 +52,14 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
-        fetchCityNumber()
+//        fetchCityNumber()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let id = segue.identifier, id == "addItem", let vc = segue.destination as? AddItemViewController {
+            vc.delegate = self
+        }
     }
 
     // MARK: - tableview data source
@@ -58,13 +76,13 @@ class TableViewController: UITableViewController {
         }
         cell.entryLabel.text     = item.entry
         cell.timeLabel.text      = timeStamp
-        cell.weatherState.text   = item.weather_state_name
+        let wStateAbbr = item.weather_state_abbr  ?? "City unknown"
+        let stateImageURL = "https://www.metaweather.com/static/img/weather/png/64/\(wStateAbbr).png"
+        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
+        cell.weatherState.text   = item.weather_state_name ?? wStateAbbr
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city
         cell.stateAbbrLabel.text = item.weather_state_abbr
-        let wStateAbbr = item.weather_state_abbr  ?? "c"
-        let stateImageURL = "https://www.metaweather.com/static/img/weather/\(wStateAbbr).svg"
-        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
 
         return cell
     }

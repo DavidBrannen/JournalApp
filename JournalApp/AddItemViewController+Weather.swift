@@ -129,6 +129,8 @@ extension AddItemViewController {
 
             DispatchQueue.main.async {
                 self.persistenceManager.save()
+                self.delegate?.reload()
+                print("I am done")
             }
         }
     }
