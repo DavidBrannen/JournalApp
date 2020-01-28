@@ -83,7 +83,7 @@ extension AddItemViewController {
         let oDate = self.convertDateFormater(self.urlODate, inFormat: "MM/dd/yy")
         weatherURL = "https://www.metaweather.com/api/location/\(urlCityNum)/\(oDate)/"
         let request = weatherURL
-        print(request)
+
         // 2. enter the group for each task
         group.enter()
         guard let url = URL(string: request) else { return }
@@ -102,10 +102,12 @@ extension AddItemViewController {
                 if cityDayWeathers.isEmpty == false {
                     let mid = (cityDayWeathers.count / 2) as NSInteger
                     self.state = cityDayWeathers[mid].weather_state_name
+                    self.state_abbr = cityDayWeathers[mid].weather_state_abbr
                 }
             } catch let error {
                 Swift.print("Parsing Failed \(error.localizedDescription)")
             }
+            
             // 3. leave the group for each task, when task is done
             group.leave()
         }
@@ -123,10 +125,11 @@ extension AddItemViewController {
             item.setValue(self.urlCityNum, forKey: "cityNumber")
             item.setValue(self.weatherURL, forKey: "urlWeatherCityNumberDate")
             item.setValue(self.state, forKey: "weather_state_name")
-            item.setValue("https://www.metaweather.com/static/img/weather/\(String(describing: self.state_abbr)).svg", forKey: "weather_state_abbr")
+            item.setValue(self.state_abbr, forKey: "weather_state_abbr")
 
             DispatchQueue.main.async {
                 self.persistenceManager.save()
+                self.delegate?.reload()
             }
         }
     }

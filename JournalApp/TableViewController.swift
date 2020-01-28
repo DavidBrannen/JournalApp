@@ -4,10 +4,7 @@
 //
 //  Created by David Brannen on 12/5/19.
 //  Copyright © 2019 MAC. All rights reserved.
-//https://github.com/public-apis/public-apis
-//https://www.metaweather.com/static/img/weather/X.svg
-
-
+//
 
 import UIKit
 import CoreData
@@ -61,11 +58,7 @@ class TableViewController: UITableViewController {
         cell.weatherState.text   = item.weather_state_name
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city
-        cell.stateAbbrLabel.text = item.weather_state_abbr
-        let wStateAbbr = item.weather_state_abbr  ?? "c"
-        let stateImageURL = "https://www.metaweather.com/static/img/weather/\(wStateAbbr).svg"
-        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
-
+        
         return cell
     }
     

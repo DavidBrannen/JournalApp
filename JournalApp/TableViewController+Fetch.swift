@@ -122,9 +122,7 @@ extension TableViewController {
                     if cityDayWeathers.isEmpty == false {
                         let mid = (cityDayWeathers.count / 2) as NSInteger
                         let state = cityDayWeathers[mid].weather_state_name
-                        let state_abbr = cityDayWeathers[mid].weather_state_abbr
                         self.items[index].setValue(state, forKey: "weather_state_name")
-                        self.items[index].setValue(state_abbr, forKey: "weather_state_abbr")
                     }
                 } catch let error {
                     print("Parsing Failed \(error.localizedDescription)")
