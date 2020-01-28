@@ -75,8 +75,9 @@ class TableViewController: UITableViewController {
         cell.timeLabel.text      = timeStamp
         let wStateAbbr = item.weather_state_abbr  ?? "City unknown"
         let stateImageURL = "https://www.metaweather.com/static/img/weather/png/64/\(wStateAbbr).png"
+        print("\(stateImageURL) with \(item.weather_state_abbr) # \(item.cityNumber) abbr \(wStateAbbr)")
         cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
-        cell.weatherState.text   = item.weather_state_name ?? "City unknown"
+        cell.weatherState.text   = item.weather_state_name
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city
         return cell
