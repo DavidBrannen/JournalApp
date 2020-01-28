@@ -10,6 +10,7 @@ import UIKit
 
 class JournalCell: UITableViewCell {
 
+    @IBOutlet weak var stateAbbrLabel: UILabel!
     @IBOutlet weak var entryLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var weatherImage: UIImageView!

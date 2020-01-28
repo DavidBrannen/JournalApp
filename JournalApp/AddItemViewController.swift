@@ -18,10 +18,18 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     let emtyEntryAlertMessage = "Your entry was left blank."
     let emtyEntryAlertActionTitle = "Okay"
     let homeMetroplex = "atlanta"
-    var urlCityNum = ""
     var urlODate = ""
     private var datePicker = UIDatePicker()
     let session = URLSession(configuration: .default)
+    var city = ""
+    var oDate = ""
+    var currentDate = ""
+    var currentTime = ""
+    var entryText   = ""
+    var urlCityNum  = ""
+    var weatherURL  = ""
+    var state       = ""
+    var state_abbr  = ""
 
 
     let persistenceManager: PersistenceManager
@@ -37,10 +45,21 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         itemEntryTextView?.delegate = self
-        addDatePicker()
         newEntrySetup()
+        addDatePicker()
     }
-    
+    func newEntrySetup() {
+        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
+        let results: Array = persistenceManager.fetch(Item.self, sort: sort);
+        if let first = results.first, let city = first.city {
+            metroplex.text = city
+        }
+        else {
+            metroplex.text = homeMetroplex
+        }
+    }
+
+    // MARK: - Date Picker
     func addDatePicker() {
         datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
@@ -59,17 +78,6 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
         view.endEditing(true)
     }
     
-    func newEntrySetup() {
-        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: false)
-        let results: Array = persistenceManager.fetch(Item.self, sort: sort);
-        if let first = results.first, let city = first.city {
-            metroplex.text = city
-        }
-        else {
-            metroplex.text = homeMetroplex
-        }
-    }
-    
   // MARK: - Buttons
     @IBAction func saveContactButton(_ sender: Any) {
         
@@ -85,7 +93,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
             
         } else {
             newData()
-            fetchCityNumberNew()
+            fetchCityNumberNew() // fetch weather and save
         }
         dismiss(animated: true, completion: nil)
     }
