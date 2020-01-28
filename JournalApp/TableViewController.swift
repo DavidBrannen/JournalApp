@@ -19,6 +19,7 @@ protocol ReloadProtocol: AnyObject {
 
 extension TableViewController: ReloadProtocol {
     func reload() {
+        fetchData()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -52,7 +53,6 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
-//        fetchCityNumber()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -79,7 +79,7 @@ class TableViewController: UITableViewController {
         let wStateAbbr = item.weather_state_abbr  ?? "City unknown"
         let stateImageURL = "https://www.metaweather.com/static/img/weather/png/64/\(wStateAbbr).png"
         cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
-        cell.weatherState.text   = item.weather_state_name ?? wStateAbbr
+        cell.weatherState.text   = item.weather_state_name ?? "City unknown"
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city
         cell.stateAbbrLabel.text = item.weather_state_abbr

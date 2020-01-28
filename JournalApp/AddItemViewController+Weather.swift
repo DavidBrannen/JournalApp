@@ -83,7 +83,7 @@ extension AddItemViewController {
         let oDate = self.convertDateFormater(self.urlODate, inFormat: "MM/dd/yy")
         weatherURL = "https://www.metaweather.com/api/location/\(urlCityNum)/\(oDate)/"
         let request = weatherURL
-        print(request)
+
         // 2. enter the group for each task
         group.enter()
         guard let url = URL(string: request) else { return }
@@ -130,7 +130,6 @@ extension AddItemViewController {
             DispatchQueue.main.async {
                 self.persistenceManager.save()
                 self.delegate?.reload()
-                print("I am done")
             }
         }
     }
