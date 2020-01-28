@@ -31,6 +31,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     var state       = ""
     var state_abbr  = ""
 
+
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
