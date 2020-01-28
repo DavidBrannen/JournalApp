@@ -102,7 +102,6 @@ extension AddItemViewController {
                 if cityDayWeathers.isEmpty == false {
                     let mid = (cityDayWeathers.count / 2) as NSInteger
                     self.state = cityDayWeathers[mid].weather_state_name
-                    self.state_abbr = cityDayWeathers[mid].weather_state_abbr
                 }
             } catch let error {
                 Swift.print("Parsing Failed \(error.localizedDescription)")
@@ -125,7 +124,6 @@ extension AddItemViewController {
             item.setValue(self.urlCityNum, forKey: "cityNumber")
             item.setValue(self.weatherURL, forKey: "urlWeatherCityNumberDate")
             item.setValue(self.state, forKey: "weather_state_name")
-            item.setValue(self.state_abbr, forKey: "weather_state_abbr")
 
             DispatchQueue.main.async {
                 self.persistenceManager.save()
