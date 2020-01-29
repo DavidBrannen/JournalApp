@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */; };
 		0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FA239963C5005C34C8 /* AppDelegate.swift */; };
 		0405B9FD239963C5005C34C8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FC239963C5005C34C8 /* SceneDelegate.swift */; };
 		0405BA02239963C5005C34C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0405BA00239963C5005C34C8 /* Main.storyboard */; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewController+reload.swift"; sourceTree = "<group>"; };
 		0405B9F7239963C5005C34C8 /* JournalApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JournalApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0405B9FA239963C5005C34C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0405B9FC239963C5005C34C8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -116,7 +118,6 @@
 				C97269BBBFDBDD6A52A61656 /* Pods-JournalAppTests.debug.xcconfig */,
 				3232DED0DE8BE4433B86C3FA /* Pods-JournalAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -149,6 +150,7 @@
 				0405B9FA239963C5005C34C8 /* AppDelegate.swift */,
 				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
 				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
+				02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */,
 				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
 				0409BC1223C8FC0000DB8C3E /* AddItemViewController+Weather.swift */,
 				0405BA00239963C5005C34C8 /* Main.storyboard */,
@@ -438,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */,
 				0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */,
 				0409BC1123C67EDC00DB8C3E /* TableViewController+Fetch.swift in Sources */,
 				0409BC1323C8FC0000DB8C3E /* AddItemViewController+Weather.swift in Sources */,
