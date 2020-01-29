@@ -275,7 +275,7 @@
                     <navigationItem key="navigationItem" title="Entries" id="Fvr-gW-8gb">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="AIh-eX-iBD">
                             <connections>
-                                <segue destination="uPE-jm-ef2" kind="presentation" modalPresentationStyle="fullScreen" id="qDw-xr-LeG"/>
+                                <segue destination="uPE-jm-ef2" kind="presentation" identifier="addItem" modalPresentationStyle="fullScreen" id="qDw-xr-LeG"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
