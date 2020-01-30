@@ -80,9 +80,9 @@ extension TableViewController {
                 var cityDayWeathers: Array<CityDayWeather>
                 cityDayWeathers = try decoder.decode([CityDayWeather].self, from: data)
                 if cityDayWeathers.isEmpty == false {
-                    let mid = (cityDayWeathers.count / 2) as NSInteger
-                    let state = cityDayWeathers[mid].weather_state_name
-                    let state_abbr = cityDayWeathers[mid].weather_state_abbr
+//                    let mid = (cityDayWeathers.count / 2) as NSInteger
+                    let state = cityDayWeathers[0].weather_state_name
+                    let state_abbr = cityDayWeathers[0].weather_state_abbr
                     self.items[index].setValue(state, forKey: "weather_state_name")
                     self.items[index].setValue(state_abbr, forKey: "weather_state_abbr")
                     self.items[index].setValue(self.getCurrentDate() as String, forKey: "weatherUpdateDate")
