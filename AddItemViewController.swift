@@ -25,12 +25,14 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     var oDate = ""
     var currentDate = ""
     var currentTime = ""
+    var uDate = ""
     var entryText   = ""
     var urlCityNum  = ""
     var weatherURL  = ""
     var state       = ""
     var state_abbr  = ""
-
+    
+    weak var delegate: ReloadProtocol?
 
     let persistenceManager: PersistenceManager
     init(persistenceManager: PersistenceManager) {

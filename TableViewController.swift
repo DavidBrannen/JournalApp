@@ -4,14 +4,11 @@
 //
 //  Created by David Brannen on 12/5/19.
 //  Copyright © 2019 MAC. All rights reserved.
-//https://github.com/public-apis/public-apis
-//https://www.metaweather.com/static/img/weather/X.svg
-
-
+//
 
 import UIKit
 import CoreData
-
+import SDWebImage
 
 class TableViewController: UITableViewController {
     
@@ -40,10 +37,10 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
-        fetchCityNumber()
+        ifNeededUpdateWeather()
     }
-
-    // MARK: - tableview data source
+    
+    // MARK: - Tableview data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
@@ -57,12 +54,12 @@ class TableViewController: UITableViewController {
         }
         cell.entryLabel.text     = item.entry
         cell.timeLabel.text      = timeStamp
+        let wStateAbbr = item.weather_state_abbr  ?? "City unknown"
+        let stateImageURL = "https://www.metaweather.com/static/img/weather/png/64/\(wStateAbbr).png"
+        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
         cell.weatherState.text   = item.weather_state_name
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city
-//        let stateImageURL = "https://www.metaweather.com/static/img/weather/\(String(describing: item.weather_state_abbr)).svg"
-        cell.stateAbbrLabel.text = item.weather_state_abbr
-        
         return cell
     }
     

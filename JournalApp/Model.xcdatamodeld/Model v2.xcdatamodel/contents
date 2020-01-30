@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Item" representedClassName=".Item" syncable="YES" codeGenerationType="class">
         <attribute name="changedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="city" optional="YES" attributeType="String"/>
@@ -11,9 +11,11 @@
         <attribute name="time" optional="YES" attributeType="String"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="urlWeatherCityNumberDate" optional="YES" attributeType="String"/>
+        <attribute name="weather_state_abbr" optional="YES" attributeType="String"/>
         <attribute name="weather_state_name" optional="YES" attributeType="String"/>
+        <attribute name="weatherUpdateDate" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Item" positionX="-9" positionY="36" width="128" height="208"/>
+        <element name="Item" positionX="-9" positionY="36" width="128" height="238"/>
     </elements>
 </model>
