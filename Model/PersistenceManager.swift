@@ -9,7 +9,8 @@
 import Foundation
 import CoreData
 
-final class PersistenceManager{
+//Singleton - Ensure a class only has one instance, and provide a global point of access to it
+final class PersistenceManager {
     
     private init() {}
     static let shared = PersistenceManager()

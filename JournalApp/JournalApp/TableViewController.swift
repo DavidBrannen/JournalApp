@@ -37,6 +37,7 @@ class TableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
+        ifNeededUpdateWeather()
     }
     
     // MARK: - Tableview data source
