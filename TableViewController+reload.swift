@@ -15,7 +15,7 @@ protocol ReloadProtocol: AnyObject {
 extension TableViewController: ReloadProtocol {
     
     func reload() {
-        fetchData()
+        fetchData(sortItem: sortkp)
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
