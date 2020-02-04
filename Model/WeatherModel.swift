@@ -43,3 +43,10 @@ struct CityForWeather : Codable {
 class Notifications {
     static let notificationWeatherReady = Notification.Name(rawValue: "weatherReady")
 }
+
+enum kp : String {
+    case timestamp = "timestamp"
+    case occurrenceDate = "occurrenceDate"
+}
+
+
