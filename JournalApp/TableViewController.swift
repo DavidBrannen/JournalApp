@@ -17,6 +17,7 @@ class TableViewController: UITableViewController {
     let downloadLock = NSLock()
     let persistenceManager: PersistenceManager
     let session = URLSession(configuration: .default)
+    var sortkp = kp.occurrenceDate
 
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
@@ -36,7 +37,7 @@ class TableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchData()
+        fetchData(sortItem: sortkp)
         ifNeededUpdateWeather()
     }
     
