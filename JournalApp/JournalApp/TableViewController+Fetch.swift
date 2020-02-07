@@ -15,12 +15,14 @@ import UIKit
  
  while adding/updating save udate and weather states
  */
-
 extension TableViewController {
     
     // MARK: - Data Fetch
-    func fetchData() {
-        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
+    func fetchData(sortItem: kp) {
+        var sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
+        if (sortItem == kp.occurrenceDate){
+            sort = NSSortDescriptor(key: #keyPath(Item.occurrenceDate), ascending: true)
+        }
         items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -29,6 +31,7 @@ extension TableViewController {
     }
     
     // MARK: - Update Weather
+//State pattern - the weather forcast object behavior depends on if it is the most current forcast unitl the date has past, and it must change at run-time depending on the new forcast.
     func ifNeededUpdateWeather() {
         let formatteryyyy = DateFormatter()
         formatteryyyy.dateFormat = "yyyy/MM/dd"
@@ -36,7 +39,7 @@ extension TableViewController {
         formatter.dateFormat = "MM/dd/yy"
         
         for index in items.indices {
-            //check odate
+            //check odate to udate and skip if it has been update already today.
             //skip this loop if "oDate \(occurrenceDate) is smaller than uDate \(weatherUpdateDate) or Both dates are same - SKIPPED"
             let occurrenceDate = formatteryyyy.date(from: items[index].value(forKey: "occurrenceDate") as! String)
             let testDateData = items[index].value(forKey: "weatherUpdateDate")
@@ -44,10 +47,9 @@ extension TableViewController {
             if testDateData != nil {
                 weatherUpdateDate = formatter.date(from: items[index].value(forKey: "weatherUpdateDate") as! String)!
             }
-//            print("updated: \(weatherUpdateDate); currently \(String(describing: formatter.date (from: getCurrentDate()))) odate:\(occurrenceDate):::\(items[index].value(forKey: "occurrenceDate") as! String)")
             if occurrenceDate?.compare(weatherUpdateDate) == .orderedSame  //dates equal
                 || occurrenceDate?.compare(weatherUpdateDate) == .orderedAscending //oDate is smaller then the udate
-                || formatter.date (from: getCurrentDate())?.compare(weatherUpdateDate) == .orderedSame  //same day
+                || formatter.date (from: getCurrentDate())?.compare(weatherUpdateDate) == .orderedSame  //already updated
             {continue}
 
             fetchWeatherFromRemote(index: index)

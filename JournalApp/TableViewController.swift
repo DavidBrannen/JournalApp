@@ -9,15 +9,16 @@
 import UIKit
 import CoreData
 import SDWebImage
+var sortkp = kp.occurrenceDate
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController, dropDownProtocol {
     
     let cellId = "Cell"
     var items: [NSManagedObject] = []
     let downloadLock = NSLock()
     let persistenceManager: PersistenceManager
     let session = URLSession(configuration: .default)
-    var sortkp = kp.occurrenceDate
+    var button = DropDownBtn()
 
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
@@ -32,6 +33,16 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
+        button = DropDownBtn.init(frame: CGRect(x: 0.0, y: 0.0, width: 200, height: 20))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Sort by", for: .normal)
+        self.view.addSubview(button)
+        
+//        button.leftAnchor.constraint(equalTo: self.).isActive = true
+//        button.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+//        button.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+//        button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+
         self.tableView.rowHeight = UITableView.automaticDimension
     }
     
@@ -41,6 +52,11 @@ class TableViewController: UITableViewController {
         ifNeededUpdateWeather()
     }
     
+    func dropDownPressed(string: String) {
+        fetchData(sortItem: sortkp)
+        self.reloadUI()
+    }
+
     // MARK: - Tableview data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count

@@ -1,0 +1,6 @@
+framework module Pods_JournalApp_JournalAppUITests {
+  umbrella header "Pods-JournalApp-JournalAppUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

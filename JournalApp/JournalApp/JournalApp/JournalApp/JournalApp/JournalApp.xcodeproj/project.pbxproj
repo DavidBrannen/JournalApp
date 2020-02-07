@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -116,17 +116,17 @@
 			isa = PBXGroup;
 			children = (
 				0405B9FA239963C5005C34C8 /* AppDelegate.swift */,
-				0405B9FC239963C5005C34C8 /* SceneDelegate.swift */,
+				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
+				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
+				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
+				0409BC1223C8FC0000DB8C3E /* AddItemViewController+Weather.swift */,
 				0405BA00239963C5005C34C8 /* Main.storyboard */,
+				0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */,
+				0405B9FC239963C5005C34C8 /* SceneDelegate.swift */,
 				0405BA06239963C8005C34C8 /* Assets.xcassets */,
 				0405BA08239963C8005C34C8 /* LaunchScreen.storyboard */,
 				0405BA0B239963C8005C34C8 /* Info.plist */,
-				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
-				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
 				0405BA31239B0C0C005C34C8 /* Model.xcdatamodeld */,
-				0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */,
-				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
-				0409BC1223C8FC0000DB8C3E /* AddItemViewController+Weather.swift */,
 			);
 			path = JournalApp;
 			sourceTree = "<group>";
@@ -156,6 +156,29 @@
 				043D16DE23B80FA0006A602D /* PersistenceManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		6AF782990053B7ED362653B1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				35219738A88C7B62D4551C80 /* Pods-JournalApp.debug.xcconfig */,
+				3D37CE600ACF50156993D6E2 /* Pods-JournalApp.release.xcconfig */,
+				A837BEBE0A3DDF5913300F78 /* Pods-JournalApp-JournalAppUITests.debug.xcconfig */,
+				5F079D6B82FA36C09BC7A0E8 /* Pods-JournalApp-JournalAppUITests.release.xcconfig */,
+				D1E1FC9A23CF49A6EDB84311 /* Pods-JournalAppTests.debug.xcconfig */,
+				18E55851ED37E3B1619E61C1 /* Pods-JournalAppTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C0E4E684BDD9FD0177C6B458 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				275248954F046EC7EA970173 /* Pods_JournalApp.framework */,
+				BB70671ACBA7FF28EA74827E /* Pods_JournalApp_JournalAppUITests.framework */,
+				D2059AEDB36A75652AEE7C5C /* Pods_JournalAppTests.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
