@@ -19,10 +19,17 @@ extension TableViewController {
     
     // MARK: - Data Fetch
     func fetchData(sortItem: kp) {
-        var sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
-        if (sortItem == kp.occurrenceDate){
-            sort = NSSortDescriptor(key: #keyPath(Item.occurrenceDate), ascending: true)
+        let keyPath: String
+        switch sortItem {
+            case .occurrenceDate:
+                keyPath = "occurrenceDate"
+            case .timestamp:
+                keyPath = "timestamp"
+            default:
+                keyPath = "entry"
         }
+        let sort = NSSortDescriptor(key: keyPath, ascending: true)
+        
         items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {
             self.tableView.reloadData()

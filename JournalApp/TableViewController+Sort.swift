@@ -71,7 +71,7 @@ extension TableViewController {
             case 0:
                 endFrame = CGRect(x: 0, y: 0,
                                   width: 300.0,
-                                  height: SortOption.allCases.count * 44.0)
+                                  height: Double(SortOption.allCases.count) * 44.0)
                 endTag = 1
             default:
                 endFrame = .zero
