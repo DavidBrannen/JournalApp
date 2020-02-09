@@ -15,12 +15,14 @@ import UIKit
  
  while adding/updating save udate and weather states
  */
-
 extension TableViewController {
     
     // MARK: - Data Fetch
-    func fetchData() {
-        let sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
+    func fetchData(sortItem: kp) {
+        var sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
+        if (sortItem == kp.occurrenceDate){
+            sort = NSSortDescriptor(key: #keyPath(Item.occurrenceDate), ascending: true)
+        }
         items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {
             self.tableView.reloadData()

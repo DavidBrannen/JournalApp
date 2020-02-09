@@ -25,6 +25,7 @@ class AddItemViewController: UIViewController, UITextViewDelegate {
     var oDate = ""
     var currentDate = ""
     var currentTime = ""
+    var uDate = ""
     var entryText   = ""
     var urlCityNum  = ""
     var weatherURL  = ""

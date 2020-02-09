@@ -16,4 +16,5 @@ class JournalCell: UITableViewCell {
     @IBOutlet weak var weatherState: UILabel!
     @IBOutlet weak var city: UILabel!
     @IBOutlet weak var occurrenceDate: UILabel!
+    @IBOutlet weak var wUpdateDate: UILabel!
 }
