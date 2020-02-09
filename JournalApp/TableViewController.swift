@@ -11,15 +11,27 @@ import CoreData
 import SDWebImage
 var sortkp = kp.occurrenceDate
 
-class TableViewController: UITableViewController, dropDownProtocol {
+class TableViewController: UITableViewController {
     
     let cellId = "Cell"
     var items: [NSManagedObject] = []
     let downloadLock = NSLock()
     let persistenceManager: PersistenceManager
     let session = URLSession(configuration: .default)
-    var button = DropDownBtn()
-
+    lazy var sortButton: UIBarButtonItem = {
+        let btn = UIBarButtonItem.init(title: "Sort by",
+                                       style: .plain,
+                                       target: self,
+                                       action: #selector(toggleSortOptionsMenu))
+        btn.tag = 0 // use tag to determine table status
+        return btn
+    }()
+    lazy var sortOptionsTable: SortOptionsTable = {
+        let tbl = SortOptionsTable(frame: .zero, style: .plain)
+        tbl.sortDelegate = self
+        return tbl
+    }()
+    
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
         super.init(nibName: nil, bundle: nil)
@@ -33,16 +45,7 @@ class TableViewController: UITableViewController, dropDownProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Entries"
-        button = DropDownBtn.init(frame: CGRect(x: 0.0, y: 0.0, width: 200, height: 20))
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Sort by", for: .normal)
-        self.view.addSubview(button)
-        
-//        button.leftAnchor.constraint(equalTo: self.).isActive = true
-//        button.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-//        button.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-//        button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-
+        setupSortingUI()
         self.tableView.rowHeight = UITableView.automaticDimension
     }
     
@@ -52,9 +55,10 @@ class TableViewController: UITableViewController, dropDownProtocol {
         ifNeededUpdateWeather()
     }
     
-    func dropDownPressed(string: String) {
-        fetchData(sortItem: sortkp)
-        self.reloadUI()
+    func setupSortingUI() {
+        navigationItem.setLeftBarButton(sortButton,
+                                             animated: false)
+        view.addSubview(sortOptionsTable)
     }
 
     // MARK: - Tableview data source

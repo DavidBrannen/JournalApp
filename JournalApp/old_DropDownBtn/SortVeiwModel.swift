@@ -8,13 +8,14 @@
 
 import UIKit
 
-protocol dropDownProtocol {
-    func dropDownPressed(string: String)
+protocol DropDownProtocol: AnyObject {
+    func dropDownPressed(option: SortOption)
 }
 
-class DropDownBtn: UIButton, dropDownProtocol {
-    func dropDownPressed(string: String) {
-        self.setTitle(string, for: .normal)
+class DropDownBtn: UIButton, DropDownProtocol {
+    
+    func dropDownPressed(option: SortOption) {
+        self.setTitle(option.rawValue, for: .normal)
         dismissSortMenu()
     }
     
@@ -82,7 +83,7 @@ class DropDownBtn: UIButton, dropDownProtocol {
 class DropdownView: UIView, UITableViewDelegate, UITableViewDataSource {
     var sortOptions = ["Time Stamp","Occurrence Date"]
     var tableview = UITableView ()
-    var delegate : dropDownProtocol!
+    var delegate : DropDownProtocol!
     override init(frame: CGRect) {
         super.init(frame: frame)
         tableview.delegate = self
@@ -118,6 +119,7 @@ class DropdownView: UIView, UITableViewDelegate, UITableViewDataSource {
         default:
             sortkp = kp.occurrenceDate
         }
-        self.delegate.dropDownPressed(string: sortOptions[indexPath.row])
+        let option = SortOption(rawValue: sortOptions[indexPath.row])!
+        self.delegate.dropDownPressed(option: option)
     }
 }

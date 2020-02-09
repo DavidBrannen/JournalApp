@@ -44,7 +44,7 @@ class Notifications {
     static let notificationWeatherReady = Notification.Name(rawValue: "weatherReady")
 }
 
-enum kp : String {
+enum kp : String, CaseIterable {
     case timestamp = "timestamp"
     case occurrenceDate = "occurrenceDate"
 }
