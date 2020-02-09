@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0257B39123ECEC4E00C0AB14 /* SortVeiwModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */; };
+		0257B39123ECEC4E00C0AB14 /* DropDownProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */; };
 		02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */; };
 		0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FA239963C5005C34C8 /* AppDelegate.swift */; };
 		0405B9FD239963C5005C34C8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FC239963C5005C34C8 /* SceneDelegate.swift */; };
@@ -48,7 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortVeiwModel.swift; sourceTree = "<group>"; };
+		0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownProtocol.swift; sourceTree = "<group>"; };
 		02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewController+reload.swift"; sourceTree = "<group>"; };
 		0405B9F7239963C5005C34C8 /* JournalApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JournalApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0405B9FA239963C5005C34C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 		0405B9F9239963C5005C34C8 /* JournalApp */ = {
 			isa = PBXGroup;
 			children = (
-				3F36AD0D23F0B3DD00B88077 /* old_DropDownBtn */,
+				3F36AD0D23F0B3DD00B88077 /* Protocols */,
 				0405B9FA239963C5005C34C8 /* AppDelegate.swift */,
 				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
 				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
@@ -197,12 +197,12 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		3F36AD0D23F0B3DD00B88077 /* old_DropDownBtn */ = {
+		3F36AD0D23F0B3DD00B88077 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */,
+				0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */,
 			);
-			path = old_DropDownBtn;
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		931C05F48FF1C025264449C1 /* Frameworks */ = {
@@ -456,7 +456,7 @@
 			files = (
 				02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */,
 				0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */,
-				0257B39123ECEC4E00C0AB14 /* SortVeiwModel.swift in Sources */,
+				0257B39123ECEC4E00C0AB14 /* DropDownProtocol.swift in Sources */,
 				0409BC1123C67EDC00DB8C3E /* TableViewController+Fetch.swift in Sources */,
 				0409BC1323C8FC0000DB8C3E /* AddItemViewController+Weather.swift in Sources */,
 				3FC6C08023F0B4D20002C94F /* TableViewController+Sort.swift in Sources */,

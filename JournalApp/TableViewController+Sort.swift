@@ -70,7 +70,7 @@ extension TableViewController {
         switch tagValue {
             case 0:
                 endFrame = CGRect(x: 0, y: 0,
-                                  width: 300.0,
+                                  width: 200.0,
                                   height: Double(SortOption.allCases.count) * 44.0)
                 endTag = 1
             default:
