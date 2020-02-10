@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0257B39123ECEC4E00C0AB14 /* SortVeiwModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */; };
+		0257B39123ECEC4E00C0AB14 /* DropDownProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */; };
 		02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */; };
 		0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FA239963C5005C34C8 /* AppDelegate.swift */; };
 		0405B9FD239963C5005C34C8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0405B9FC239963C5005C34C8 /* SceneDelegate.swift */; };
@@ -24,6 +24,7 @@
 		0409BC1323C8FC0000DB8C3E /* AddItemViewController+Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0409BC1223C8FC0000DB8C3E /* AddItemViewController+Weather.swift */; };
 		043D16DF23B80FA0006A602D /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043D16DE23B80FA0006A602D /* PersistenceManager.swift */; };
 		046BC11A23B260CC0054C06B /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046BC11923B260CC0054C06B /* WeatherModel.swift */; };
+		3FC6C08023F0B4D20002C94F /* TableViewController+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC6C07F23F0B4D20002C94F /* TableViewController+Sort.swift */; };
 		4467F3F74945934AF1B2CB83 /* Pods_JournalApp_JournalAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F7C8FB5ACFB82F6B2CD189 /* Pods_JournalApp_JournalAppUITests.framework */; };
 		8042437556815C6180EA580C /* Pods_JournalAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D45CEBA494B157862CAA77 /* Pods_JournalAppTests.framework */; };
 		F9DC4F8D092BA19BEEFBD999 /* Pods_JournalApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF28089B39FD5A6F27CA8714 /* Pods_JournalApp.framework */; };
@@ -47,7 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortVeiwModel.swift; sourceTree = "<group>"; };
+		0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownProtocol.swift; sourceTree = "<group>"; };
 		02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewController+reload.swift"; sourceTree = "<group>"; };
 		0405B9F7239963C5005C34C8 /* JournalApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JournalApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0405B9FA239963C5005C34C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +74,7 @@
 		046BC11923B260CC0054C06B /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		094612DCEBDF1C9B805EA052 /* Pods-JournalApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JournalApp.debug.xcconfig"; path = "Target Support Files/Pods-JournalApp/Pods-JournalApp.debug.xcconfig"; sourceTree = "<group>"; };
 		3232DED0DE8BE4433B86C3FA /* Pods-JournalAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JournalAppTests.release.xcconfig"; path = "Target Support Files/Pods-JournalAppTests/Pods-JournalAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		3FC6C07F23F0B4D20002C94F /* TableViewController+Sort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableViewController+Sort.swift"; sourceTree = "<group>"; };
 		7BB5B551C782CE4AF1183EE6 /* Pods-JournalApp-JournalAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JournalApp-JournalAppUITests.debug.xcconfig"; path = "Target Support Files/Pods-JournalApp-JournalAppUITests/Pods-JournalApp-JournalAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8113492FEEDEA7A712367AD8 /* Pods-JournalApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JournalApp.release.xcconfig"; path = "Target Support Files/Pods-JournalApp/Pods-JournalApp.release.xcconfig"; sourceTree = "<group>"; };
 		A9D45CEBA494B157862CAA77 /* Pods_JournalAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JournalAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,13 +151,14 @@
 		0405B9F9239963C5005C34C8 /* JournalApp */ = {
 			isa = PBXGroup;
 			children = (
+				3F36AD0D23F0B3DD00B88077 /* Protocols */,
 				0405B9FA239963C5005C34C8 /* AppDelegate.swift */,
 				0405BA2D23999D92005C34C8 /* TableViewController.swift */,
 				0409BC1023C67EDC00DB8C3E /* TableViewController+Fetch.swift */,
 				02A16B5C23E1DA2400A9B94C /* TableViewController+reload.swift */,
+				3FC6C07F23F0B4D20002C94F /* TableViewController+Sort.swift */,
 				0405BA2F239AB593005C34C8 /* AddItemViewController.swift */,
 				0409BC1223C8FC0000DB8C3E /* AddItemViewController+Weather.swift */,
-				0257B39023ECEC4E00C0AB14 /* SortVeiwModel.swift */,
 				0405BA00239963C5005C34C8 /* Main.storyboard */,
 				0405BA5D23A5DD1A005C34C8 /* JournalCell.swift */,
 				0405B9FC239963C5005C34C8 /* SceneDelegate.swift */,
@@ -192,6 +195,14 @@
 				043D16DE23B80FA0006A602D /* PersistenceManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		3F36AD0D23F0B3DD00B88077 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				0257B39023ECEC4E00C0AB14 /* DropDownProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		931C05F48FF1C025264449C1 /* Frameworks */ = {
@@ -445,9 +456,10 @@
 			files = (
 				02A16B5D23E1DA2400A9B94C /* TableViewController+reload.swift in Sources */,
 				0405BA30239AB593005C34C8 /* AddItemViewController.swift in Sources */,
-				0257B39123ECEC4E00C0AB14 /* SortVeiwModel.swift in Sources */,
+				0257B39123ECEC4E00C0AB14 /* DropDownProtocol.swift in Sources */,
 				0409BC1123C67EDC00DB8C3E /* TableViewController+Fetch.swift in Sources */,
 				0409BC1323C8FC0000DB8C3E /* AddItemViewController+Weather.swift in Sources */,
+				3FC6C08023F0B4D20002C94F /* TableViewController+Sort.swift in Sources */,
 				0405B9FB239963C5005C34C8 /* AppDelegate.swift in Sources */,
 				0405BA33239B0C0C005C34C8 /* Model.xcdatamodeld in Sources */,
 				043D16DF23B80FA0006A602D /* PersistenceManager.swift in Sources */,

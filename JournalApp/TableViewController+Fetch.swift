@@ -19,10 +19,17 @@ extension TableViewController {
     
     // MARK: - Data Fetch
     func fetchData(sortItem: kp) {
-        var sort = NSSortDescriptor(key: #keyPath(Item.timestamp), ascending: true)
-        if (sortItem == kp.occurrenceDate){
-            sort = NSSortDescriptor(key: #keyPath(Item.occurrenceDate), ascending: true)
+        let keyPath: String
+        switch sortItem {
+            case .occurrenceDate:
+                keyPath = "occurrenceDate"
+            case .timestamp:
+                keyPath = "timestamp"
+            default:
+                keyPath = "entry"
         }
+        let sort = NSSortDescriptor(key: keyPath, ascending: true)
+        
         items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -59,8 +66,10 @@ extension TableViewController {
         // 1. make a group
         let group = DispatchGroup()
         //"https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
-        let oDate = (self.items[index].value(forKey: "occurrenceDate") as! String)
-        let cityNum = self.items[index].value(forKey: "cityNumber") as! String
+        guard let oDate = self.items[index].value(forKey: "occurrenceDate") as? String,
+            let cityNum = self.items[index].value(forKey: "cityNumber") as? String else {
+                return // one value was nil
+        }
         let weatherURL = "https://www.metaweather.com/api/location/\(cityNum)/\(oDate)/"
         self.items[index].setValue(weatherURL, forKey: "urlWeatherCityNumberDate")
         guard let request = self.items[index].value(forKey: "urlWeatherCityNumberDate") as? String else {
