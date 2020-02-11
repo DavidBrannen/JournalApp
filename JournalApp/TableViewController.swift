@@ -9,15 +9,14 @@
 import UIKit
 import CoreData
 import SDWebImage
-var sortkp = kp.occurrenceDate
 
 class TableViewController: UITableViewController {
     
     let cellId = "Cell"
     var items: [NSManagedObject] = []
-    let downloadLock = NSLock()
     let persistenceManager: PersistenceManager
     let session = URLSession(configuration: .default)
+    var sortkp = kp.timestamp
     lazy var sortButton: UIBarButtonItem = {
         let btn = UIBarButtonItem.init(title: "Sort by",
                                        style: .plain,
@@ -31,6 +30,9 @@ class TableViewController: UITableViewController {
         tbl.sortDelegate = self
         return tbl
     }()
+    
+    let defaults = UserDefaults.standard
+    
     
     init(persistenceManager: PersistenceManager) {
         self.persistenceManager = persistenceManager
@@ -56,8 +58,9 @@ class TableViewController: UITableViewController {
     }
     
     func setupSortingUI() {
-        navigationItem.setLeftBarButton(sortButton,
-                                             animated: false)
+        let keyPathString = defaults.string(forKey: "sortOption") ?? "occurrenceDate"
+        sortkp = kp(rawValue: keyPathString)!
+        navigationItem.setLeftBarButton(sortButton, animated: false)
         view.addSubview(sortOptionsTable)
     }
 
@@ -77,7 +80,7 @@ class TableViewController: UITableViewController {
         cell.timeLabel.text      = timeStamp
         let wStateAbbr           = item.weather_state_abbr  ?? "City unknown"
         let stateImageURL        = "https://www.metaweather.com/static/img/weather/png/64/\(wStateAbbr).png"
-        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage"))
+        cell.weatherImage.sd_setImage(with: URL(string: stateImageURL), placeholderImage: UIImage(named: "placeholderImage")) //Pod SDWebImage
         cell.weatherState.text   = item.weather_state_name
         cell.occurrenceDate.text = item.occurrenceDate
         cell.city.text           = item.city

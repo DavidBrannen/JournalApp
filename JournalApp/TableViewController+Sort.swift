@@ -39,6 +39,7 @@ final class SortOptionsTable: UITableView, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
+        cell.backgroundColor = UIColor.lightGray
         cell.textLabel?.text = SortOption.allCases[indexPath.row].rawValue
         return cell
     }
@@ -94,8 +95,9 @@ extension TableViewController {
 
 extension TableViewController: DropDownProtocol {
     func dropDownPressed(option: SortOption) {
-        sortkp = option
-        fetchData(sortItem: sortkp)
+//        sortkp = option
+        defaults.set(option.rawValue, forKey:"sortOption")
+        fetchData(sortItem: option)
         toggleSortOptionsMenu()
         self.reloadUI()
     }
