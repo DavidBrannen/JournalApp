@@ -2,7 +2,7 @@
 //  TableViewController+Sort.swift
 //  JournalApp
 //
-//  Created by K Y on 2/9/20.
+//  Created on 2/9/20.
 //  Copyright © 2020 MAC. All rights reserved.
 //
 
