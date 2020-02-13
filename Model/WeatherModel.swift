@@ -45,9 +45,10 @@ class Notifications {
 }
 
 enum kp : String, CaseIterable {
-    case timestamp = "timestamp"
-    case occurrenceDate = "occurrenceDate"
-    case alpha = "alphabetical"
+    case timestamp      = "added date"
+    case occurrenceDate = "occurrence"
+    case alpha          = "entry"
+    case reverseOrder   = "Revercse Order"
 }
 
 

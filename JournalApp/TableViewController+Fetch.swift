@@ -18,17 +18,17 @@ import UIKit
 extension TableViewController {
     
     // MARK: - Data Fetch
-    func fetchData(sortItem: kp) {
+    func fetchData(sortItem: kp, ascending: Bool) {
         let keyPath: String
         switch sortItem {
-            case .occurrenceDate:
-                keyPath = "occurrenceDate"
-            case .timestamp:
-                keyPath = "timestamp"
-            default:
-                keyPath = "entry"
+        case .occurrenceDate:
+            keyPath = "occurrenceDate"
+        case .timestamp:
+            keyPath = "timestamp"
+        default:
+            keyPath = "entry"
         }
-        let sort = NSSortDescriptor(key: keyPath, ascending: true)
+        let sort = NSSortDescriptor(key: keyPath, ascending: ascending)
         
         items = persistenceManager.fetch(Item.self, sort: sort)
         DispatchQueue.main.async {

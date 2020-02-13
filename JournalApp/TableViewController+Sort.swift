@@ -70,6 +70,7 @@ extension TableViewController {
         let endTag: Int
         switch tagValue {
             case 0:
+                
                 endFrame = CGRect(x: 0, y: 0,
                                   width: 200.0,
                                   height: Double(SortOption.allCases.count) * 44.0)
@@ -91,13 +92,26 @@ extension TableViewController {
             if finished { completion?(endTag) }
         }
     }
+    func reverseSortOrder() {
+        if keyPathAscendingBool == true {
+            keyPathAscendingBool = false
+        } else {
+            keyPathAscendingBool = true
+        }
+    }
 }
 
 extension TableViewController: DropDownProtocol {
     func dropDownPressed(option: SortOption) {
-//        sortkp = option
-        defaults.set(option.rawValue, forKey:"sortOption")
-        fetchData(sortItem: option)
+        if option == kp.reverseOrder {
+            reverseSortOrder()
+            defaults.set(keyPathAscendingBool, forKey:"reverseOrder")
+        } else {
+            sortkp = option
+            defaults.set(option.rawValue, forKey:"sortOption")
+            sortButton.title = "Sorted by \(option.rawValue)"
+        }
+        fetchData(sortItem: sortkp, ascending: keyPathAscendingBool)
         toggleSortOptionsMenu()
         self.reloadUI()
     }

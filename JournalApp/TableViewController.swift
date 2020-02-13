@@ -17,11 +17,13 @@ class TableViewController: UITableViewController {
     let persistenceManager: PersistenceManager
     let session = URLSession(configuration: .default)
     var sortkp = kp.timestamp
+    var keyPathAscendingBool = true
     lazy var sortButton: UIBarButtonItem = {
-        let btn = UIBarButtonItem.init(title: "Sort by",
+        let btn = UIBarButtonItem.init(title: "Sorted by \(sortkp.rawValue)",
                                        style: .plain,
                                        target: self,
                                        action: #selector(toggleSortOptionsMenu))
+        
         btn.tag = 0 // use tag to determine table status
         return btn
     }()
@@ -46,20 +48,23 @@ class TableViewController: UITableViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Entries"
         setupSortingUI()
         self.tableView.rowHeight = UITableView.automaticDimension
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchData(sortItem: sortkp)
+        fetchData(sortItem: sortkp, ascending: keyPathAscendingBool)
         ifNeededUpdateWeather()
     }
     
     func setupSortingUI() {
-        let keyPathString = defaults.string(forKey: "sortOption") ?? "occurrenceDate"
+        let keyPathString = defaults.string(forKey: "sortOption") ?? kp.occurrenceDate.rawValue
         sortkp = kp(rawValue: keyPathString)!
+        keyPathAscendingBool = defaults.bool(forKey: "reverseOrder")
+//        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.topItem?.title = "Entries"
+
         navigationItem.setLeftBarButton(sortButton, animated: false)
         view.addSubview(sortOptionsTable)
     }
